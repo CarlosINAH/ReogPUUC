@@ -3,26 +3,24 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sección 4 · Museo del Puuc — Deshumidificadores y dataloggers</title>
+<title>Sección 4 · Museo del Puuc — Deshumidificadores, A/C y dataloggers</title>
 <style>
 :root{
   --bg:#eef1f4; --panel:#ffffff; --ink:#1e2732; --sub:#5a6675; --border:#d3dae2;
-  --brand:#7a5a2e; --brand2:#b07b34; --accent:#1f7a6b; --accent2:#2ea58f;
+  --brand:#7a5a2e; --accent:#1f7a6b; --accent2:#2ea58f;
   --ok:#1f8a4c; --warn:#c9871a; --bad:#c0392b; --line:#c9d2db;
   --patio:#e7ddc7; --wall:#5b4a33; --room:#f6f2ea; --roomsel:#fff6e6;
-  --cover:rgba(46,165,143,.18); --coverln:rgba(31,122,107,.55);
-  --dl:#1f6fb0;
+  --dehum:#1f7a6b; --ac:#1288a8; --dl:#1f6fb0;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
-.wrap{max-width:1040px;margin:0 auto;padding:14px}
+body.dragging,body.dragging *{user-select:none!important;-webkit-user-select:none!important;cursor:grabbing!important}
+.wrap{max-width:1060px;margin:0 auto;padding:14px}
 h1{font-size:20px;margin:.2em 0}
 h2{font-size:17px;margin:.6em 0 .2em}
-h3{font-size:15px;margin:.4em 0}
-.muted{color:var(--sub)}
-.small{font-size:12.5px}
+.muted{color:var(--sub)} .small{font-size:12.5px}
 .tag{display:inline-block;background:#eef4f2;color:var(--accent);border:1px solid #cfe4de;border-radius:999px;padding:1px 9px;font-size:12px;font-weight:600}
-.card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:14px;margin:12px 0;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:15px;margin:12px 0;box-shadow:0 1px 3px rgba(0,0,0,.04)}
 .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 .spacer{flex:1}
 .btn{background:var(--accent);color:#fff;border:0;border-radius:9px;padding:9px 15px;font-size:14px;font-weight:600;cursor:pointer}
@@ -31,95 +29,99 @@ h3{font-size:15px;margin:.4em 0}
 .btn.ghost:hover{background:#e3e8ee}
 .btn:disabled{opacity:.5;cursor:not-allowed}
 .hd{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.logo{width:40px;height:40px;border:2px solid var(--brand);border-radius:8px;display:grid;place-items:center;color:var(--brand);font-weight:800;font-size:18px;background:#fff}
+.logo{width:42px;height:42px;border:2px solid var(--brand);border-radius:9px;display:grid;place-items:center;color:var(--brand);font-weight:800;font-size:18px;background:#fff}
 
 /* CLIMA */
-.climate{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-@media(max-width:640px){.climate{grid-template-columns:1fr}}
-.metric{background:#f7f9fb;border:1px solid var(--border);border-radius:10px;padding:10px}
-.metric b{font-size:26px;display:block;line-height:1.1}
-.metric .small b{font-size:inherit;display:inline;line-height:inherit}
-.slider{width:100%}
-.pill{font-weight:700;padding:2px 8px;border-radius:8px}
-.pill.ok{background:#e6f4ec;color:var(--ok)} .pill.warn{background:#fbf1dc;color:var(--warn)} .pill.bad{background:#fbe6e2;color:var(--bad)}
-
-/* EQUIPO */
-.equip{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-@media(max-width:640px){.equip{grid-template-columns:1fr}}
-.eq{border:1px solid var(--border);border-radius:10px;padding:10px;background:#fff}
-.eq .ico{font-size:26px}
-.eq table{border-collapse:collapse;width:100%;font-size:12.5px;margin-top:6px}
-.eq td{padding:2px 4px;border-bottom:1px dotted #e2e8ee}
-.eq td:first-child{color:var(--sub)}
-
-/* OVERVIEW PLANO */
-.ovwrap{overflow:auto}
-.ov{position:relative;width:760px;height:600px;margin:6px auto;background:#f3efe6;border:2px solid var(--wall);border-radius:6px}
-.oroom{position:absolute;border:2px solid var(--wall);background:var(--room);border-radius:3px;cursor:pointer;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;font-weight:700;color:#4a3f2e;transition:background .15s;padding:4px}
-.oroom:hover{background:var(--roomsel)}
-.oroom .a{font-size:11px;font-weight:600;color:var(--sub)}
-.oroom.done{background:#e7f5ec;border-color:#3a9c63}
-.oroom.done::after{content:"✓";position:absolute;top:3px;right:6px;color:#2f9a57;font-weight:900}
-.oserv{position:absolute;border:1px dashed #b9a988;background:#efe9dc;border-radius:3px;font-size:10px;color:#8a7b5c;display:grid;place-items:center;text-align:center;padding:2px}
-.opatio{position:absolute;background:var(--patio);border:2px dashed #c3b389;border-radius:4px;display:grid;place-items:center;color:#8a7a55;font-weight:700}
-.ocasa{width:70px;height:38px;border:2px solid #a58f63;border-radius:60px;background:#f0e8d5;display:grid;place-items:center;font-size:9px;color:#7a6a45}
-
-/* WORKSPACE SALA */
-.svwrap{overflow:auto;background:#fbfaf7;border:1px solid var(--border);border-radius:10px;padding:8px}
-.sala{position:relative;margin:6px auto;background:#efeadf;border:3px solid var(--wall);border-radius:3px;user-select:none;touch-action:none}
-.exhibit{position:absolute;border:2px dashed #b3a686;border-radius:4px;background:rgba(255,255,255,.35);pointer-events:none;display:grid;place-items:center;color:#9a8c6a;font-size:11px}
-.opening{position:absolute;width:26px;height:26px;border-radius:6px;display:grid;place-items:center;cursor:pointer;font-size:15px;z-index:6;background:#fff;border:1px solid var(--line);transform:translate(-50%,-50%)}
-.opening.open{background:#fdece9;border-color:#e5b4ab}
-.opening.closed{background:#e9f5ee;border-color:#a9d8bd}
-.unit{position:absolute;width:30px;height:30px;border-radius:8px;display:grid;place-items:center;font-size:17px;cursor:grab;z-index:8;box-shadow:0 2px 5px rgba(0,0,0,.25);transform:translate(-50%,-50%);border:2px solid #fff}
-.unit.dehum{background:#e8f6f2}
-.unit.dl{background:#e6f0fa}
-.unit.dragging{cursor:grabbing;z-index:30;box-shadow:0 8px 18px rgba(0,0,0,.35)}
-.cover{position:absolute;border-radius:50%;background:var(--cover);border:1.5px solid var(--coverln);z-index:4;pointer-events:none;transform:translate(-50%,-50%)}
-.dlz{position:absolute;border-radius:50%;border:1.5px dashed rgba(31,111,176,.5);z-index:4;pointer-events:none;transform:translate(-50%,-50%)}
-.tray{border:1px dashed var(--line);border-radius:10px;padding:10px;margin-top:10px;background:#fff}
-.chip{display:inline-flex;align-items:center;gap:6px;background:#f2f5f8;border:1px solid var(--border);border-radius:999px;padding:6px 12px;margin:4px;cursor:grab;font-size:13px;font-weight:600}
-.chip:active{cursor:grabbing}
-.scalebar{display:flex;align-items:center;gap:6px;margin:8px 0;font-size:12px;color:var(--sub)}
-.scalebar .bar{height:8px;border:1px solid #333;border-top:0;position:relative}
-.stat{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-top:8px}
-.stat .s{background:#f7f9fb;border:1px solid var(--border);border-radius:9px;padding:8px}
-.stat .s b{font-size:18px;display:block}
-.fb{border-radius:10px;padding:10px;margin-top:10px;font-size:13.5px}
-.fb.ok{background:#eaf6ee;border:1px solid #b6ddc4}
-.fb.no{background:#fbeeea;border:1px solid #e6c1b7}
-.fb ul{margin:6px 0 0;padding-left:18px} .fb li{margin:2px 0}
-.legend{font-size:12px;color:var(--sub);display:flex;gap:14px;flex-wrap:wrap;margin-top:6px}
-.legend span{display:inline-flex;align-items:center;gap:5px}
-.dot{width:12px;height:12px;border-radius:50%;display:inline-block}
-.note{background:#fff8e9;border:1px solid #f0dcae;border-radius:10px;padding:10px;font-size:12.5px}
-kbd{background:#eef1f4;border:1px solid var(--border);border-radius:5px;padding:0 5px;font-size:12px}
-.hide{display:none}
-.progressbar{height:10px;background:#e3e8ee;border-radius:999px;overflow:hidden}
-.progressbar>i{display:block;height:100%;background:var(--accent2)}
-
-/* clima real (3 columnas) */
 .climate3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
 @media(max-width:640px){.climate3{grid-template-columns:1fr}}
-.bignum{font-size:24px;font-weight:700;width:2.7em;border:1px solid var(--border);border-radius:8px;padding:2px 6px;background:#fff;color:var(--ink)}
-.unitof{font-size:20px;font-weight:700;color:var(--sub);margin-left:2px}
-/* iconos SVG de equipo */
-.svgico{display:inline-flex;vertical-align:middle}
+.metric{background:#f7f9fb;border:1px solid var(--border);border-radius:10px;padding:11px}
+.metric b{font-size:26px;display:block;line-height:1.15}
+.metric .small b{font-size:inherit;display:inline}
+.bignum{font-size:26px;font-weight:700;width:2.9em;border:1px solid var(--border);border-radius:8px;padding:1px 6px;background:#fff;color:var(--ink)}
+.bignum.ro{border-color:transparent;background:transparent;padding-left:0}
+.unitof{font-size:19px;font-weight:700;color:var(--sub);margin-left:3px}
+.wxbar{margin-top:10px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:12.5px}
+.livedot{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:5px}
+.livedot.on{background:#25a55b;box-shadow:0 0 0 3px rgba(37,165,91,.18)}
+.livedot.off{background:#b9b3a6}
+
+/* EQUIPO */
+.equip{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+@media(max-width:800px){.equip{grid-template-columns:1fr}}
+.eq{border:1px solid var(--border);border-radius:11px;padding:11px;background:#fff}
 .eqhead{display:flex;align-items:center;gap:10px}
 .eqbadge{width:44px;height:44px;border-radius:10px;display:grid;place-items:center;flex:none}
 .eqbadge.dehum{background:#e2f4ef;border:1px solid #b7e0d4}
+.eqbadge.ac{background:#e0f2f8;border:1px solid #b3ddea}
 .eqbadge.dl{background:#e7f0fb;border:1px solid #bcd4ee}
-.unit svg{width:20px;height:20px;display:block;pointer-events:none}
-.chip svg{width:18px;height:18px}
-.legend .lgi{width:18px;height:18px;display:inline-grid;place-items:center}
-.inf{display:inline-block;background:#eef4f2;color:var(--accent);border:1px solid #cfe4de;border-radius:999px;padding:1px 8px;font-size:11.5px;font-weight:700}
-/* overview: contador de equipo colocado por sala */
-.oroom .cnt{font-size:10.5px;font-weight:700;color:#2a7a68;margin-top:2px;display:flex;gap:6px;align-items:center;justify-content:center}
-.oroom .cnt svg{width:12px;height:12px}
-/* navegación entre salas */
-.salanav{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
-.museo-sum{background:#f2f8f6;border:1px solid #cfe4de;border-radius:10px;padding:8px 10px;margin-top:10px;font-size:13px;display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+.eq table{border-collapse:collapse;width:100%;font-size:12px;margin-top:8px}
+.eq td{padding:2px 4px;border-bottom:1px dotted #e2e8ee}
+.eq td:first-child{color:var(--sub)}
+
+/* MINIATURA / MAPA */
+.maphint{font-size:12.5px;color:var(--sub);margin:2px 0 8px}
+.ovwrap{overflow:auto;display:flex;justify-content:center}
+.museo{position:relative;background:#f3efe6;border:2px solid var(--wall);border-radius:8px;flex:none}
+.oroom{position:absolute;border:2px solid var(--wall);background:var(--room);border-radius:3px;cursor:pointer;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;font-weight:700;color:#4a3f2e;transition:transform .12s,background .15s,box-shadow .15s;overflow:hidden}
+.oroom:hover{background:var(--roomsel);transform:scale(1.03);box-shadow:0 4px 12px rgba(0,0,0,.14);z-index:5}
+.oroom.cur{background:var(--roomsel);border-color:var(--accent);box-shadow:0 0 0 2px var(--accent) inset}
+.oroom .a{font-size:11px;font-weight:600;color:var(--sub)}
+.oroom.done{background:#e7f5ec;border-color:#3a9c63}
+.oroom.done::after{content:"✓";position:absolute;top:2px;right:5px;color:#2f9a57;font-weight:900;font-size:12px}
+.oserv{position:absolute;border:1px dashed #b9a988;background:#efe9dc;border-radius:3px;color:#8a7b5c;display:grid;place-items:center;text-align:center;padding:2px;line-height:1.1}
+.opatio{position:absolute;background:var(--patio);border:2px dashed #c3b389;border-radius:4px;display:grid;place-items:center;color:#8a7a55;font-weight:700}
+.ocasa{border:2px solid #a58f63;border-radius:60px;background:#f0e8d5;display:grid;place-items:center;color:#7a6a45}
+.ocnt{font-weight:700;color:#2a7a68;display:flex;gap:5px;align-items:center;justify-content:center;margin-top:3px}
+.ocnt svg{vertical-align:middle}
+.museo-sum{background:#f2f8f6;border:1px solid #cfe4de;border-radius:10px;padding:9px 11px;margin-top:12px;font-size:13px;display:flex;gap:16px;flex-wrap:wrap;align-items:center}
 .museo-sum b{color:var(--accent)}
+.museo-sum svg{vertical-align:middle;margin-right:2px}
+
+/* WORKSPACE */
+@keyframes expandin{from{transform:scale(.95);opacity:.2}to{transform:scale(1);opacity:1}}
+.expandin{animation:expandin .26s cubic-bezier(.2,.7,.3,1)}
+.wshead{display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap}
+.minimap{position:relative;background:#f3efe6;border:1.5px solid var(--wall);border-radius:6px;flex:none}
+.minimap .oroom{cursor:pointer;font-size:8px;padding:0}
+.minimap .oroom .a,.minimap .oroom::after{display:none}
+.svwrap{overflow:auto;background:#fbfaf7;border:1px solid var(--border);border-radius:10px;padding:8px;margin-top:10px}
+.sala{position:relative;margin:6px auto;background:#efeadf;border:3px solid var(--wall);border-radius:3px;-webkit-user-select:none;user-select:none;touch-action:none}
+.exhibit{position:absolute;border:2px dashed #b3a686;border-radius:4px;background:rgba(255,255,255,.35);pointer-events:none;display:grid;place-items:center;color:#9a8c6a;font-size:11px}
+.opening{position:absolute;width:26px;height:26px;border-radius:6px;display:grid;place-items:center;cursor:pointer;font-size:15px;z-index:7;background:#fff;border:1px solid var(--line);transform:translate(-50%,-50%)}
+.opening.open{background:#fdece9;border-color:#e5b4ab}
+.opening.closed{background:#e9f5ee;border-color:#a9d8bd}
+.unit{position:absolute;width:32px;height:32px;border-radius:9px;display:grid;place-items:center;cursor:grab;z-index:9;box-shadow:0 2px 6px rgba(0,0,0,.28);transform:translate(-50%,-50%);border:2px solid #fff;touch-action:none;-webkit-user-select:none;user-select:none}
+.unit svg{width:21px;height:21px;display:block;pointer-events:none}
+.unit.dehum{background:#e8f6f2}
+.unit.ac{background:#e2f3f8}
+.unit.dl{background:#e6f0fa}
+.unit.dragging{cursor:grabbing;z-index:40;box-shadow:0 10px 22px rgba(0,0,0,.4)}
+.cover{position:absolute;border-radius:50%;z-index:4;pointer-events:none;transform:translate(-50%,-50%)}
+.cover.dehum{background:rgba(46,165,143,.16);border:1.5px solid rgba(31,122,107,.5)}
+.cover.ac{background:rgba(30,150,190,.15);border:1.5px dashed rgba(18,136,168,.6)}
+.cover.dl{background:transparent;border:1.5px dotted rgba(31,111,176,.6)}
+.tray{border:1px dashed var(--line);border-radius:10px;padding:11px;margin-top:10px;background:#fff}
+.chip{display:inline-flex;align-items:center;gap:6px;background:#f2f5f8;border:1px solid var(--border);border-radius:999px;padding:6px 12px;margin:4px 4px 0 0;cursor:grab;font-size:13px;font-weight:600;touch-action:none}
+.chip svg{width:18px;height:18px}
+.chip:active{cursor:grabbing}
+.inf{display:inline-block;background:#eef4f2;color:var(--accent);border:1px solid #cfe4de;border-radius:999px;padding:1px 8px;font-size:11.5px;font-weight:700}
+.scalebar{display:flex;align-items:center;gap:6px;margin:8px 0 0;font-size:12px;color:var(--sub)}
+.scalebar .bar{height:8px;border:1px solid #333;border-top:0}
+.legend{font-size:12px;color:var(--sub);display:flex;gap:14px;flex-wrap:wrap;margin-top:8px}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend .lgi{display:inline-grid;place-items:center}
+.stat{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-top:10px}
+.stat .s{background:#f7f9fb;border:1px solid var(--border);border-radius:9px;padding:9px}
+.stat .s b{font-size:18px;display:block}
+.fb{border-radius:10px;padding:11px;margin-top:10px;font-size:13.5px}
+.fb.ok{background:#eaf6ee;border:1px solid #b6ddc4}
+.fb.no{background:#fbeeea;border:1px solid #e6c1b7}
+.fb ul{margin:6px 0 0;padding-left:18px} .fb li{margin:2px 0}
+.note{background:#fff8e9;border:1px solid #f0dcae;border-radius:10px;padding:11px;font-size:12.5px}
+kbd{background:#eef1f4;border:1px solid var(--border);border-radius:5px;padding:0 5px;font-size:12px}
+.hide{display:none}
+.progressbar{height:10px;background:#e3e8ee;border-radius:999px;overflow:hidden;margin-top:12px}
+.progressbar>i{display:block;height:100%;background:var(--accent2);transition:width .3s}
 </style>
 </head>
 <body>
@@ -128,7 +130,7 @@ kbd{background:#eef1f4;border:1px solid var(--border);border-radius:5px;padding:
   <div class="hd">
     <div class="logo">卅</div>
     <div>
-      <h1>Sección 4 · Deshumidificadores y dataloggers</h1>
+      <h1>Sección 4 · Deshumidificadores, A/C y dataloggers</h1>
       <div class="muted small">Museo Arqueológico del Puuc · Zona Arqueológica de Kabah · Método RE-ORG (INAH)</div>
     </div>
     <div class="spacer"></div>
@@ -137,17 +139,17 @@ kbd{background:#eef1f4;border:1px solid var(--border);border-radius:5px;padding:
 
   <!-- CLIMA -->
   <div class="card">
-    <h2>🌡️ Clima de la zona (datos reales)</h2>
+    <h2>🌡️ Clima de la zona <span class="tag" id="wxTag">cargando…</span></h2>
     <div class="climate3">
       <div class="metric">
-        <span class="small muted">Temperatura real</span>
-        <div><input id="tIn" class="bignum" type="number" value="40" min="0" max="60" step="0.1"><span class="unitof">°C</span></div>
-        <span class="small muted">Zona Puuc, Yucatán</span>
+        <span class="small muted">Temperatura exterior</span>
+        <div><input id="tIn" class="bignum" type="number" value="40" min="-5" max="60" step="0.1"><span class="unitof">°C</span></div>
+        <span class="small muted">Kabah, Yucatán</span>
       </div>
       <div class="metric">
-        <span class="small muted">Humedad relativa real</span>
-        <div><input id="rhIn" class="bignum" type="number" value="36" min="0" max="100" step="1"><span class="unitof">%</span></div>
-        <span class="small muted">Lectura del HTC-2</span>
+        <span class="small muted">Humedad relativa exterior</span>
+        <div><input id="rhIn" class="bignum" type="number" value="55" min="0" max="100" step="1"><span class="unitof">%</span></div>
+        <span class="small muted">del aire ambiente</span>
       </div>
       <div class="metric">
         <span class="small muted">Sensación térmica (se calcula)</span>
@@ -155,233 +157,173 @@ kbd{background:#eef1f4;border:1px solid var(--border);border-radius:5px;padding:
         <span class="small muted" id="hiWho">—</span>
       </div>
     </div>
+    <div class="wxbar">
+      <span><span class="livedot off" id="liveDot"></span><span id="wxStatus">Conectando con el servicio meteorológico…</span></span>
+      <button class="btn ghost" id="wxRefresh" style="padding:5px 10px;font-size:12.5px">↻ Actualizar</button>
+    </div>
     <div class="note" style="margin-top:10px">
-      La <b>temperatura y la humedad son datos reales</b> (edítalos con lo que marque el HTC-2); lo único que se calcula es la
-      <b>sensación térmica</b> (índice de calor). Esa humedad es lo que <b>daña la colección</b>: con HR alta aparecen moho, corrosión
-      y cristalización de sales en piedra y estuco Puuc. El objetivo no es enfriar la sala, sino <b>estabilizar la humedad</b>
-      — meta de conservación <b>≈ 50 % HR</b> (evitar &gt; 60 %). Por eso los <b>deshumidificadores</b> bajan y sostienen la HR,
-      y los <b>dataloggers</b> comprueban que el control funciona.
+      La <b>temperatura y humedad son reales</b> (en vivo desde Open-Meteo para Kabah); lo único que se calcula es la
+      <b>sensación térmica</b>. El objetivo dentro de las salas: <b>≈ 22 °C</b> con los <b>aires acondicionados</b> y
+      <b>≈ 50 % HR</b> con los <b>deshumidificadores</b> — así se frena el moho, la corrosión y la cristalización de sales
+      en la piedra y el estuco Puuc. Los <b>dataloggers</b> comprueban que ese control se cumple.
     </div>
   </div>
 
   <!-- EQUIPO -->
   <div class="card">
-    <h2>🧰 Equipo disponible (marcas reales de tus fotos)</h2>
+    <h2>🧰 Equipo disponible (marcas reales de tus fotos) · <span class="inf">suministro ∞ ilimitado</span></h2>
     <div class="equip">
       <div class="eq">
-        <div class="eqhead"><span class="eqbadge dehum" id="eqIcoD"></span><div><b>Deshumidificador · Hisense DH50K1R</b><div class="small muted">Deshumidificador de ambiente</div></div></div>
+        <div class="eqhead"><span class="eqbadge dehum" id="eqIcoD"></span><div><b>Deshumidificador · Hisense DH50K1R</b><div class="small muted">controla la humedad</div></div></div>
         <table>
           <tr><td>Capacidad</td><td><b>23.7 L/día</b></td></tr>
-          <tr><td>Potencia</td><td>460 W · 4.2 A</td></tr>
-          <tr><td>Alimentación</td><td>115 V~ · 60 Hz</td></tr>
-          <tr><td>Refrigerante</td><td>R32 · 0.10 kg (inflamable)</td></tr>
-          <tr><td>Cobertura de diseño*</td><td><b id="covLbl">60 m²</b> por equipo</td></tr>
+          <tr><td>Potencia</td><td>460 W · 115 V · R32</td></tr>
+          <tr><td>Cobertura</td><td><b id="covD">60 m²</b> por equipo</td></tr>
         </table>
-        <div class="small muted" style="margin-top:5px">*Regla práctica en clima cálido-húmedo para sostener ≈50 % HR. Ajustable — verifica con la ficha del fabricante.</div>
       </div>
       <div class="eq">
-        <div class="eqhead"><span class="eqbadge dl" id="eqIcoL"></span><div><b>Datalogger · HTC-2</b><div class="small muted">Reloj / termohigrómetro T°/HR</div></div></div>
+        <div class="eqhead"><span class="eqbadge ac" id="eqIcoA"></span><div><b>Aire acondicionado</b><div class="small muted">controla la temperatura</div></div></div>
         <table>
-          <tr><td>Mide</td><td>Temperatura y humedad relativa</td></tr>
-          <tr><td>Sondas</td><td>Interior (IN) + exterior (OUT)</td></tr>
-          <tr><td>Colocación</td><td>a ~1.5 m de altura</td></tr>
-          <tr><td>Zona representada</td><td>~<b id="dlLbl">3.0 m</b> de radio (microclima)</td></tr>
-          <tr><td>Regla</td><td>lejos de puertas, ventanas y del propio deshumidificador</td></tr>
+          <tr><td>Ajuste (setpoint)</td><td><b>22 °C</b></td></tr>
+          <tr><td>Función</td><td>enfría y estabiliza T°</td></tr>
+          <tr><td>Cobertura</td><td><b id="covA">35 m²</b> por equipo</td></tr>
         </table>
-        <div class="small muted" style="margin-top:5px">Un datalogger mide el punto donde está: colócalo donde <b>representa</b> a la colección, no junto a una entrada de aire.</div>
+      </div>
+      <div class="eq">
+        <div class="eqhead"><span class="eqbadge dl" id="eqIcoL"></span><div><b>Datalogger · HTC-2</b><div class="small muted">mide T° / HR</div></div></div>
+        <table>
+          <tr><td>Mide</td><td>Temperatura y humedad</td></tr>
+          <tr><td>Colocación</td><td>~1.5 m de altura</td></tr>
+          <tr><td>Regla</td><td>lejos de puertas/ventanas y equipos</td></tr>
+        </table>
       </div>
     </div>
   </div>
 
-  <!-- AJUSTES -->
-  <details class="card" id="cfgCard">
-    <summary style="cursor:pointer;font-weight:700;font-size:17px">⚙️ Ajustes — medidas reales y cobertura</summary>
-    <p class="small muted" style="margin-top:8px">Escribe aquí las <b>cotas reales</b> de cada sala (interior, en metros) cuando las midas en sitio, y la
-      <b>cobertura</b> del deshumidificador según su ficha técnica. Todo se redibuja a escala y se guarda en este navegador.</p>
-    <div id="cfgSalas" class="stat"></div>
-    <div class="row" style="margin-top:10px">
-      <div class="metric" style="flex:1;min-width:180px">
-        <label class="small muted">Cobertura por deshumidificador (m²)</label>
-        <input class="slider" id="cfgCover" type="range" min="25" max="140" step="5" value="60">
-        <div class="small">Actual: <b id="cfgCoverV">60</b> m² · 1 equipo cada <b id="cfgCoverV2">60</b> m²</div>
-      </div>
-      <div class="metric" style="flex:1;min-width:180px">
-        <label class="small muted">Radio del microclima del datalogger (m)</label>
-        <input class="slider" id="cfgDlr" type="range" min="1.5" max="6" step="0.5" value="3">
-        <div class="small">Actual: <b id="cfgDlrV">3.0</b> m de radio</div>
-      </div>
-    </div>
-    <div class="row" style="margin-top:8px">
-      <button class="btn ghost" onclick="resetCfg()">↺ Restablecer medidas de fábrica</button>
-      <span class="small muted">Las medidas de fábrica son aproximadas (la escala no venía rotulada en el plano).</span>
-    </div>
-  </details>
-
-  <!-- OVERVIEW -->
+  <!-- MAPA / MINIATURA -->
   <div class="card" id="ovCard">
-    <h2>🗺️ Plano del museo — elige una sala</h2>
-    <p class="small muted">Distribución a escala aproximada del plano oficial (5 salas alrededor del Patio Central con la Casa Maya).
-       Ve <b>terminando las salas una por una</b>: haz clic en una para colocar sus deshumidificadores y dataloggers.</p>
-    <div class="ovwrap"><div class="ov" id="ov"></div></div>
-    <div class="progressbar" style="margin-top:10px"><i id="progFill" style="width:0%"></i></div>
+    <h2>🗺️ Elige una sala — miniatura del museo</h2>
+    <div class="maphint">Las 5 salas rodean el Patio Central (con la Casa Maya). Toca una sala y <b>se expande</b> para colocar su equipo. Ve completando <b>todo el museo</b>, una sala a la vez.</div>
+    <div class="ovwrap"><div class="museo" id="ov"></div></div>
+    <div class="progressbar"><i id="progFill" style="width:0%"></i></div>
     <div class="museo-sum" id="museoSum"></div>
   </div>
 
   <!-- WORKSPACE -->
   <div class="card hide" id="wsCard">
-    <div class="row">
-      <button class="btn ghost" onclick="closeSala()">◀ Volver al plano</button>
-      <div class="salanav">
-        <button class="btn ghost" id="navPrev" onclick="navSala(-1)">◀ Sala anterior</button>
-        <button class="btn ghost" id="navNext" onclick="navSala(1)">Sala siguiente ▶</button>
+    <div class="wshead">
+      <div>
+        <button class="btn ghost" onclick="closeSala()">◀ Volver a la miniatura</button>
+        <div class="small muted" style="margin-top:8px;text-align:center">Ir a otra sala:</div>
+        <div class="ovwrap" style="justify-content:flex-start"><div class="museo minimap" id="miniMap"></div></div>
       </div>
-      <div class="spacer"></div>
-      <span class="tag" id="salaTag">—</span>
+      <div style="flex:1;min-width:240px">
+        <div class="row"><h2 id="salaTit" style="margin:0">—</h2><span class="tag" id="salaTag">—</span></div>
+        <div class="small muted" id="salaDims">—</div>
+        <div class="scalebar" id="scaleBar"></div>
+      </div>
     </div>
-    <h2 id="salaTit" style="margin-bottom:2px">—</h2>
-    <div class="small muted" id="salaDims">—</div>
 
-    <div class="scalebar" id="scaleBar"></div>
     <div class="svwrap"><div class="sala" id="sala"></div></div>
     <div class="legend">
-      <span><span class="lgi" id="lgD"></span> Deshumidificador · <span class="dot" style="background:#2ea58f"></span> su cobertura</span>
-      <span><span class="lgi" id="lgL"></span> Datalogger · <span class="dot" style="background:#1f6fb0"></span> zona que representa</span>
+      <span><span class="lgi" id="lgD"></span> Deshumidificador · <span style="width:11px;height:11px;border-radius:50%;background:rgba(46,165,143,.5);display:inline-block"></span> humedad</span>
+      <span><span class="lgi" id="lgA"></span> A/C 22 °C · <span style="width:11px;height:11px;border-radius:50%;background:rgba(30,150,190,.5);display:inline-block"></span> temperatura</span>
+      <span><span class="lgi" id="lgL"></span> Datalogger</span>
       <span>🔓 abierta · 🔒 cerrada</span>
-      <span><kbd>doble clic</kbd> en un equipo lo retira</span>
+      <span><kbd>doble clic</kbd> retira un equipo</span>
     </div>
 
     <div class="tray" id="tray"></div>
-
     <div class="stat" id="statBox"></div>
     <div id="fbBox"></div>
 
     <div class="row" style="margin-top:12px">
-      <button class="btn ghost" onclick="resetSala()">↻ Reiniciar sala</button>
+      <button class="btn ghost" onclick="resetSala()">↻ Vaciar esta sala</button>
       <div class="spacer"></div>
       <button class="btn" onclick="evaluarSala()">✅ Evaluar colocación</button>
     </div>
   </div>
 
   <div class="card small muted">
-    <b>Nota sobre la escala.</b> El plano oficial trae <b>cotas en metros</b> y área total <b>978.3 m²</b>, pero la casilla de
-    escala no viene rotulada, así que las medidas por sala de abajo son <b>aproximadas</b> (derivadas de las proporciones del plano).
-    Ajústalas con las cotas reales cuando las tengas — todas están en un solo lugar del código (<code>SALAS</code>) y el juego se
-    redibuja a escala automáticamente.
-    <div style="margin-top:6px">Versión de trabajo local · no sustituye al juego RE-ORG existente.</div>
+    <b>Medidas.</b> Las dimensiones de cada sala son <b>fijas</b>, calibradas con las proporciones del plano oficial y el área total
+    <b>978.3 m²</b> (cotas en metros). El plano se dibuja siempre <b>a escala</b>. Versión de trabajo · no sustituye al juego RE-ORG existente.
   </div>
 
 </div>
 
 <script>
 /* ============================================================
-   ICONOS — SVG de deshumidificador (Hisense vertical) y datalogger (HTC-2)
+   ICONOS SVG
    ============================================================ */
 const ICON = {
-  dehum:(s=20,c='#1f7a6b')=>`<svg viewBox="0 0 32 32" width="${s}" height="${s}" fill="none" stroke="${c}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+  dehum:(s=21)=>`<svg viewBox="0 0 32 32" width="${s}" height="${s}" fill="none" stroke="#1f7a6b" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
     <rect x="8" y="2.5" width="16" height="27" rx="3.2" fill="#e8f6f2"/>
     <line x1="12" y1="7" x2="20" y2="7"/><line x1="12" y1="9.5" x2="20" y2="9.5"/>
-    <circle cx="16" cy="15" r="2.1" fill="${c}" stroke="none"/>
+    <circle cx="16" cy="15" r="2.1" fill="#1f7a6b" stroke="none"/>
     <path d="M11.5 22.5 q2.3 -2.2 4.5 0 t4.5 0" stroke="#2a9bd8"/>
-    <path d="M16 24.8 c-1.4 1.8 -1.4 3.4 0 3.4 s1.4 -1.6 0 -3.4z" fill="#2a9bd8" stroke="none"/>
-  </svg>`,
-  dl:(s=20,c='#1f6fb0')=>`<svg viewBox="0 0 32 32" width="${s}" height="${s}" fill="none" stroke="${c}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M16 24.8 c-1.4 1.8 -1.4 3.4 0 3.4 s1.4 -1.6 0 -3.4z" fill="#2a9bd8" stroke="none"/></svg>`,
+  ac:(s=21)=>`<svg viewBox="0 0 32 32" width="${s}" height="${s}" fill="none" stroke="#1288a8" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="3" y="7.5" width="26" height="12" rx="3" fill="#e2f3f8"/>
+    <line x1="6.5" y1="15.5" x2="25.5" y2="15.5"/>
+    <path d="M8 23 q1.6 2.2 3.2 0"/><path d="M14.4 24 q1.6 2.2 3.2 0"/><path d="M20.8 23 q1.6 2.2 3.2 0"/>
+    <circle cx="24.5" cy="11" r="1.2" fill="#1288a8" stroke="none"/></svg>`,
+  dl:(s=21)=>`<svg viewBox="0 0 32 32" width="${s}" height="${s}" fill="none" stroke="#1f6fb0" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
     <rect x="4.5" y="5" width="23" height="18.5" rx="2.6" fill="#eaf1fb"/>
     <rect x="7.5" y="8" width="17" height="9.5" rx="1.3" fill="#dbe8f6"/>
-    <line x1="10" y1="11" x2="15.5" y2="11" stroke-width="2.2"/>
-    <line x1="10" y1="14.5" x2="14" y2="14.5" stroke-width="2.2"/>
+    <line x1="10" y1="11" x2="15.5" y2="11" stroke-width="2.2"/><line x1="10" y1="14.5" x2="14" y2="14.5" stroke-width="2.2"/>
     <line x1="18.5" y1="12.7" x2="22" y2="12.7"/>
-    <rect x="8" y="24.5" width="16" height="3.4" rx="1.4" fill="#c7d4e6" stroke="none"/>
-    <line x1="20.5" y1="20.3" x2="23" y2="20.3"/>
-  </svg>`
+    <rect x="8" y="24.5" width="16" height="3.4" rx="1.4" fill="#c7d4e6" stroke="none"/><line x1="20.5" y1="20.3" x2="23" y2="20.3"/></svg>`
 };
 
 /* ============================================================
-   DATOS — todo lo editable está aquí arriba
-   Medidas interiores calibradas con el plano oficial (proporciones + área 978.3 m²).
+   EQUIPO — parámetros
    ============================================================ */
-let DEHUM_COVER_M2 = 60;    // cobertura de diseño por deshumidificador (m²) — editable en Ajustes
-let DL_RADIUS_M    = 3.0;   // radio (m) del microclima que "representa" un datalogger — editable
-const DL_MIN_CLEAR_M = 1.5;   // distancia mínima de un datalogger a puertas/ventanas (m)
-const dehumR = () => Math.sqrt(DEHUM_COVER_M2/Math.PI); // radio equivalente de cobertura (m)
-
-// openings: posición en metros dentro de la sala (x desde izq, y desde arriba), sobre un muro.
-// tipo: 'door' | 'window'
-const SALAS = [
-  { id:'norte', nombre:'Sala Norte', w:13.0, h:13.0,
-    desc:'Sala cuadrada al norte del patio, con núcleos de servicio (SITE) en dos esquinas y exhibición central.',
-    exhibit:{x:2.6,y:2.6,w:7.3,h:7.3},
-    openings:[
-      {t:'door', x:3.5, y:12.5}, {t:'door', x:9.0, y:12.5},   // al corredor del patio (muro sur)
-      {t:'window', x:0, y:4.0}, {t:'window', x:0, y:8.5},      // muro poniente
-      {t:'window', x:12.5, y:6.2}                              // muro oriente
-    ]},
-  { id:'sur', nombre:'Sala Sur', w:11.6, h:8.3,
-    desc:'Sala rectangular al sur del patio, junto a la cafetería. Exhibición central y vitrinas perimetrales.',
-    exhibit:{x:2.4,y:1.8,w:6.7,h:4.4},
-    openings:[
-      {t:'door', x:3.2, y:0}, {t:'door', x:8.3, y:0},          // al corredor del patio (muro norte)
-      {t:'door', x:5.8, y:8.0},                                // acceso hacia cafetería (muro sur)
-      {t:'window', x:0, y:4.0}, {t:'window', x:11.5, y:4.0}
-    ]},
-  { id:'oriente', nombre:'Sala Oriente', w:6.2, h:29.5,
-    desc:'Galería larga de una sola nave al oriente. Vitrinas y bancos a lo largo del eje central.',
-    exhibit:{x:1.3,y:2.5,w:3.4,h:24.5},
-    openings:[
-      {t:'door', x:0, y:5.0}, {t:'door', x:0, y:13.0}, {t:'door', x:0, y:22.0}, // al corredor del patio (muro poniente)
-      {t:'window', x:6.0, y:8.0}, {t:'window', x:6.0, y:16.0}, {t:'window', x:6.0, y:24.0} // muro oriente
-    ]},
-  { id:'poniente', nombre:'Sala Poniente', w:6.0, h:25.4,
-    desc:'Galería larga al poniente, hacia el patio. Comparte muro con la Sala Temporal.',
-    exhibit:{x:1.3,y:2.4,w:3.4,h:20.2},
-    openings:[
-      {t:'door', x:6.0, y:5.0}, {t:'door', x:6.0, y:12.5}, {t:'door', x:6.0, y:20.0}, // al patio (muro oriente)
-      {t:'door', x:3.0, y:0},                                 // acceso principal (muro norte)
-      {t:'window', x:0, y:9.0}, {t:'window', x:0, y:17.0}
-    ]},
-  { id:'temporal', nombre:'Sala Temporal', w:6.0, h:25.4,
-    desc:'Galería interior del ala poniente para exposiciones temporales. Da al acceso y a la plaza arbolada.',
-    exhibit:{x:1.3,y:2.4,w:3.4,h:20.2},
-    openings:[
-      {t:'door', x:3.0, y:0},                                 // acceso (muro norte)
-      {t:'door', x:6.0, y:8.0}, {t:'door', x:6.0, y:17.0},    // paso a Sala Poniente (muro oriente)
-      {t:'window', x:0, y:6.0}, {t:'window', x:0, y:13.0}, {t:'window', x:0, y:20.0} // a la plaza (muro poniente)
-    ]}
-];
-
-const requiredDehum = s => Math.max(1, Math.ceil((s.w*s.h)/DEHUM_COVER_M2));
-const requiredDL    = s => Math.max(1, Math.ceil((s.w*s.h)/150)); // ~1 por cada 150 m² (zona representativa)
-
-/* Guardamos las medidas de fábrica para poder reescalar aperturas y exhibición
-   cuando el museo escriba sus cotas reales en Ajustes. */
-SALAS.forEach(s=>{ s._w0=s.w; s._h0=s.h;
-  s._openings0=JSON.parse(JSON.stringify(s.openings));
-  s._exhibit0=Object.assign({},s.exhibit); });
-function applyDims(s){
-  const fx=s.w/s._w0, fy=s.h/s._h0;                 // escala respecto a la medida de fábrica
-  s.openings = s._openings0.map(o=>({t:o.t, x:o.x*fx, y:o.y*fy}));  // 0→0 y borde→borde: siguen sobre el muro
-  s.exhibit  = {x:s._exhibit0.x*fx, y:s._exhibit0.y*fy, w:s._exhibit0.w*fx, h:s._exhibit0.h*fy};
-}
-/* Config editable por el usuario (medidas reales + cobertura), guardada en el navegador */
-function loadCfg(){
-  try{ const c=JSON.parse(localStorage.getItem('puuc_s4_cfg')||'{}');
-    if(c.cover) DEHUM_COVER_M2=+c.cover;
-    if(c.dlr)   DL_RADIUS_M=+c.dlr;
-    if(c.salas) SALAS.forEach(s=>{ const d=c.salas[s.id]; if(d){ if(d.w>0)s.w=+d.w; if(d.h>0)s.h=+d.h; } });
-  }catch(e){}
-  SALAS.forEach(applyDims);
-}
-function saveCfg(){
-  const salas={}; SALAS.forEach(s=>salas[s.id]={w:s.w,h:s.h});
-  try{ localStorage.setItem('puuc_s4_cfg',JSON.stringify({cover:DEHUM_COVER_M2,dlr:DL_RADIUS_M,salas})); }catch(e){}
-}
-function refreshEquipLabels(){
-  document.getElementById('covLbl').textContent=DEHUM_COVER_M2+' m²';
-  document.getElementById('dlLbl').textContent=DL_RADIUS_M.toFixed(1)+' m';
-}
+const EQ = {
+  dehum:{ label:'Deshumidificador', cover:60, need:60,  cls:'dehum', icon:ICON.dehum },
+  ac:   { label:'Aire acondicionado (22 °C)', cover:35, need:35, cls:'ac', icon:ICON.ac },
+  dl:   { label:'Datalogger', radius:3.0, cls:'dl', icon:ICON.dl }
+};
+const DL_MIN_CLEAR_M = 1.5;
+const coverR = kind => kind==='dl' ? EQ.dl.radius : Math.sqrt(EQ[kind].cover/Math.PI);
+const requiredN = (kind,s) => kind==='dl' ? Math.max(1,Math.ceil((s.w*s.h)/150)) : Math.max(1,Math.ceil((s.w*s.h)/EQ[kind].need));
 
 /* ============================================================
-   CLIMA — índice de calor (fórmula NWS Rothfusz)
+   SALAS — medidas FIJAS (calibradas con el plano · metros)
    ============================================================ */
+const SALAS = [
+  { id:'norte', nombre:'Sala Norte', w:13.0, h:13.0,
+    desc:'Sala cuadrada al norte del patio, con núcleos de servicio en dos esquinas y exhibición central.',
+    exhibit:{x:2.7,y:2.7,w:7.6,h:7.6},
+    openings:[ {t:'door',x:3.5,y:13.0},{t:'door',x:9.5,y:13.0},
+               {t:'window',x:0,y:4.0},{t:'window',x:0,y:9.0},{t:'window',x:13.0,y:6.5} ]},
+  { id:'sur', nombre:'Sala Sur', w:11.6, h:8.3,
+    desc:'Sala rectangular al sur del patio, junto a la cafetería. Exhibición central y vitrinas perimetrales.',
+    exhibit:{x:2.4,y:1.9,w:6.8,h:4.5},
+    openings:[ {t:'door',x:3.2,y:0},{t:'door',x:8.4,y:0},{t:'door',x:5.8,y:8.3},
+               {t:'window',x:0,y:4.2},{t:'window',x:11.6,y:4.2} ]},
+  { id:'oriente', nombre:'Sala Oriente', w:6.2, h:29.5,
+    desc:'Galería larga de una sola nave al oriente. Vitrinas y bancos a lo largo del eje central.',
+    exhibit:{x:1.3,y:2.5,w:3.6,h:24.5},
+    openings:[ {t:'door',x:0,y:5.0},{t:'door',x:0,y:13.0},{t:'door',x:0,y:22.0},
+               {t:'window',x:6.2,y:8.0},{t:'window',x:6.2,y:16.0},{t:'window',x:6.2,y:24.0} ]},
+  { id:'poniente', nombre:'Sala Poniente', w:6.0, h:25.4,
+    desc:'Galería larga al poniente, hacia el patio. Comparte muro con la Sala Temporal.',
+    exhibit:{x:1.3,y:2.4,w:3.4,h:20.6},
+    openings:[ {t:'door',x:6.0,y:5.0},{t:'door',x:6.0,y:12.5},{t:'door',x:6.0,y:20.0},
+               {t:'door',x:3.0,y:0},{t:'window',x:0,y:9.0},{t:'window',x:0,y:17.0} ]},
+  { id:'temporal', nombre:'Sala Temporal', w:6.0, h:25.4,
+    desc:'Galería interior del ala poniente para exposiciones temporales. Da al acceso y a la plaza arbolada.',
+    exhibit:{x:1.3,y:2.4,w:3.4,h:20.6},
+    openings:[ {t:'door',x:3.0,y:0},{t:'door',x:6.0,y:8.0},{t:'door',x:6.0,y:17.0},
+               {t:'window',x:0,y:6.0},{t:'window',x:0,y:13.0},{t:'window',x:0,y:20.0} ]}
+];
+
+/* ============================================================
+   CLIMA — en vivo (Open-Meteo) + índice de calor NWS
+   ============================================================ */
+const GEO={lat:20.2456,lon:-89.6486,name:'Kabah, Yucatán'};
+let climaT=40, climaRH=55;
+const tIn=document.getElementById('tIn'), rhIn=document.getElementById('rhIn');
 function heatIndexC(tc, rh){
   const T=tc*9/5+32, R=rh;
   let HI=0.5*(T+61+((T-68)*1.2)+(R*0.094));
@@ -393,189 +335,178 @@ function heatIndexC(tc, rh){
   }
   return (HI-32)*5/9;
 }
-const tIn=document.getElementById('tIn'), rhIn=document.getElementById('rhIn');
 function updClima(){
-  const t=+tIn.value, v=+rhIn.value;
-  if(!(t>=0)||!(v>=0)){ document.getElementById('hiVal').textContent='—'; return; }
-  const hi=heatIndexC(t,v);
+  const hi=heatIndexC(climaT,climaRH);
   document.getElementById('hiVal').textContent=Math.round(hi)+' °C';
-  let who='Sensación estable', cls='muted';
+  let who,cls;
   if(hi>=54){who='Peligro extremo de calor';cls=''}
   else if(hi>=41){who='Peligro — golpe de calor probable';cls=''}
   else if(hi>=32){who='Precaución con el calor';cls='muted'}
   else {who='Sensación estable';cls='muted'}
-  const el=document.getElementById('hiWho'); el.textContent=who+' · '+(hi-t>=0.5?('+'+Math.round(hi-t)+' °C sobre la real'):'≈ la real');
+  const el=document.getElementById('hiWho');
+  el.textContent=who+(hi-climaT>=0.5?(' · +'+Math.round(hi-climaT)+' °C sobre la real'):'');
   el.className='small '+cls;
 }
-tIn.addEventListener('input',updClima); rhIn.addEventListener('input',updClima); updClima();
+function setManual(){
+  tIn.readOnly=false; rhIn.readOnly=false; tIn.classList.remove('ro'); rhIn.classList.remove('ro');
+}
+tIn.addEventListener('input',()=>{ if(tIn.value!=='')climaT=+tIn.value; updClima(); });
+rhIn.addEventListener('input',()=>{ if(rhIn.value!=='')climaRH=+rhIn.value; updClima(); });
+async function fetchWeather(){
+  const st=document.getElementById('wxStatus'), dot=document.getElementById('liveDot'), tag=document.getElementById('wxTag');
+  try{
+    const ctrl=new AbortController(); const to=setTimeout(()=>ctrl.abort(),6000);
+    const url=`https://api.open-meteo.com/v1/forecast?latitude=${GEO.lat}&longitude=${GEO.lon}&current=temperature_2m,relative_humidity_2m&timezone=auto`;
+    const r=await fetch(url,{signal:ctrl.signal}); clearTimeout(to);
+    if(!r.ok) throw new Error('http');
+    const j=await r.json(); const c=j.current;
+    climaT=Math.round(c.temperature_2m*10)/10; climaRH=Math.round(c.relative_humidity_2m);
+    tIn.value=climaT; rhIn.value=climaRH; tIn.readOnly=true; rhIn.readOnly=true; tIn.classList.add('ro'); rhIn.classList.add('ro');
+    const hh=new Date(c.time).toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'});
+    dot.className='livedot on'; tag.textContent='en vivo'; tag.style.background='#e6f4ec';
+    st.innerHTML=`En vivo · Open-Meteo · Kabah · actualizado ${hh}`;
+    updClima();
+  }catch(e){
+    setManual();
+    dot.className='livedot off'; tag.textContent='manual'; tag.style.background='#f0eee6';
+    st.innerHTML='Sin conexión al servicio — escribe la T° y HR reales (edítalas arriba). <span class="muted">En la versión publicada del museo, los datos llegan solos.</span>';
+    updClima();
+  }
+}
+document.getElementById('wxRefresh').addEventListener('click',fetchWeather);
 
 /* ============================================================
-   ESTADO
+   ESTADO (progreso + colocaciones por sala, guardado en el navegador)
    ============================================================ */
-let done = {}; try{ done=JSON.parse(localStorage.getItem('puuc_s4_done')||'{}'); }catch(e){ done={}; }
+let done={}; try{ done=JSON.parse(localStorage.getItem('puuc_s4_done')||'{}'); }catch(e){}
+let placed={}; try{ placed=JSON.parse(localStorage.getItem('puuc_s4_placed')||'{}'); }catch(e){}
 function saveDone(){ try{ localStorage.setItem('puuc_s4_done',JSON.stringify(done)); }catch(e){} }
+function savePlaced(){ try{ localStorage.setItem('puuc_s4_placed',JSON.stringify(placed)); }catch(e){} }
+function snapshotSala(){ if(!cur)return;
+  placed[cur.id]={ units:units.map(u=>({kind:u.kind,x:+u.x.toFixed(2),y:+u.y.toFixed(2)})), closed:openings.map(o=>o.closed) };
+  savePlaced();
+}
+function placedCounts(id){ const p=placed[id]; const c={dehum:0,ac:0,dl:0};
+  if(p&&p.units) p.units.forEach(u=>c[u.kind]!==undefined&&c[u.kind]++); return c; }
 function updProgress(){
   const n=SALAS.filter(s=>done[s.id]).length;
   document.getElementById('progTag').textContent=n+' / '+SALAS.length+' salas';
   document.getElementById('progFill').style.width=(100*n/SALAS.length)+'%';
   updMuseoSum();
 }
-
-/* Colocaciones guardadas por sala — permite salir y volver con todo el museo equipado */
-let placed={}; try{ placed=JSON.parse(localStorage.getItem('puuc_s4_placed')||'{}'); }catch(e){ placed={}; }
-function savePlaced(){ try{ localStorage.setItem('puuc_s4_placed',JSON.stringify(placed)); }catch(e){} }
-function snapshotSala(){
-  if(!cur) return;
-  placed[cur.id]={ units:units.map(u=>({kind:u.kind,x:+u.x.toFixed(2),y:+u.y.toFixed(2)})),
-                   closed:openings.map(o=>o.closed) };
-  savePlaced();
-}
-function placedCounts(id){
-  const p=placed[id]; if(!p||!p.units) return {d:0,l:0};
-  return {d:p.units.filter(u=>u.kind==='dehum').length, l:p.units.filter(u=>u.kind==='dl').length};
-}
 function updMuseoSum(){
-  const el=document.getElementById('museoSum'); if(!el) return;
-  let d=0,l=0; SALAS.forEach(s=>{const c=placedCounts(s.id); d+=c.d; l+=c.l;});
+  const el=document.getElementById('museoSum'); if(!el)return;
+  let d=0,a=0,l=0; SALAS.forEach(s=>{const c=placedCounts(s.id);d+=c.dehum;a+=c.ac;l+=c.dl;});
   const dn=SALAS.filter(s=>done[s.id]).length;
   el.innerHTML=`<span>${ICON.dehum(16)} <b>${d}</b> deshumidificadores</span>
+    <span>${ICON.ac(16)} <b>${a}</b> aires acondicionados</span>
     <span>${ICON.dl(16)} <b>${l}</b> dataloggers</span>
-    <span>colocados en todo el museo · <b>${dn}/${SALAS.length}</b> salas listas</span>`;
+    <span>en todo el museo · <b>${dn}/${SALAS.length}</b> salas listas</span>`;
 }
 
 /* ============================================================
-   OVERVIEW — plano esquemático a escala
+   MAPA DEL MUSEO (miniatura + minimapa) — mismo dibujo a distintas escalas
    ============================================================ */
-const OV_POS = { // posiciones en el plano esquemático (px dentro de .ov 760x600)
-  temporal:{x:70, y:70, w:78, h:470},
-  poniente:{x:152,y:70, w:78, h:470},
-  norte:   {x:300,y:24, w:180,h:170},
-  patio:   {x:300,y:204,w:180,h:210},
-  sur:     {x:305,y:424,w:170,h:120},
-  oriente: {x:560,y:70, w:96, h:470}
+const BASE={w:760,h:600};
+const OV_POS={
+  temporal:{x:70,y:70,w:78,h:470}, poniente:{x:152,y:70,w:78,h:470},
+  norte:{x:300,y:24,w:180,h:170}, patio:{x:300,y:204,w:180,h:210},
+  sur:{x:305,y:424,w:170,h:120}, oriente:{x:560,y:70,w:96,h:470}
 };
-function buildOverview(){
-  const ov=document.getElementById('ov'); ov.innerHTML='';
+const ABBR={norte:'Nte',sur:'Sur',oriente:'Ote',poniente:'Pte',temporal:'Tmp'};
+const SERV=[ {x:70,y:20,w:150,h:40,t:'Taller · C. eléctrico'},
+             {x:600,y:20,w:150,h:70,t:'Bombas · Cisterna'},
+             {x:70,y:552,w:150,h:38,t:'Cafetería · Sanitarios'} ];
+function buildMuseoMap(el, k, currentId, onSala){
+  el.innerHTML=''; el.style.width=(BASE.w*k)+'px'; el.style.height=(BASE.h*k)+'px';
+  const px=(o)=>({left:o.x*k+'px',top:o.y*k+'px',width:o.w*k+'px',height:o.h*k+'px'});
+  const mini = k<0.5;
   // patio
-  const p=document.createElement('div'); p.className='opatio';
-  Object.assign(p.style,{left:OV_POS.patio.x+'px',top:OV_POS.patio.y+'px',width:OV_POS.patio.w+'px',height:OV_POS.patio.h+'px'});
-  p.innerHTML='<div style="text-align:center"><div class="ocasa">CASA MAYA</div><div class="small" style="color:#8a7a55;margin-top:6px">PATIO CENTRAL</div></div>';
-  ov.appendChild(p);
-  // servicios (decorativos)
-  const serv=[
-    {x:70,y:20,w:150,h:40,t:'Taller · Cuarto eléctrico'},
-    {x:600,y:20,w:150,h:70,t:'Cuarto de bombas · Cisterna'},
-    {x:70,y:552,w:150,h:38,t:'Cafetería · Sanitarios'}
-  ];
-  serv.forEach(s=>{const d=document.createElement('div');d.className='oserv';
-    Object.assign(d.style,{left:s.x+'px',top:s.y+'px',width:s.w+'px',height:s.h+'px'});d.textContent=s.t;ov.appendChild(d);});
+  const p=document.createElement('div'); p.className='opatio'; Object.assign(p.style,px(OV_POS.patio));
+  if(!mini) p.innerHTML=`<div style="text-align:center"><div class="ocasa" style="width:${70*k}px;height:${38*k}px;font-size:9px">CASA MAYA</div><div class="small" style="color:#8a7a55;margin-top:5px">PATIO CENTRAL</div></div>`;
+  el.appendChild(p);
+  // servicios
+  if(!mini) SERV.forEach(s=>{const d=document.createElement('div');d.className='oserv';Object.assign(d.style,px(s));d.style.fontSize='10px';d.textContent=s.t;el.appendChild(d);});
   // salas
   SALAS.forEach(s=>{
-    const P=OV_POS[s.id]; const d=document.createElement('div');
-    d.className='oroom'+(done[s.id]?' done':''); d.dataset.id=s.id;
-    Object.assign(d.style,{left:P.x+'px',top:P.y+'px',width:P.w+'px',height:P.h+'px'});
-    const c=placedCounts(s.id);
-    d.innerHTML=`<div>${s.nombre.replace('Sala ','')}</div><div class="a">${s.w}×${s.h} m · ${Math.round(s.w*s.h)} m²</div>`+
-      (c.d||c.l ? `<div class="cnt">${ICON.dehum(12)}${c.d} · ${ICON.dl(12)}${c.l}</div>` : '');
-    d.title=s.nombre;
-    d.onclick=()=>openSala(s.id);
-    ov.appendChild(d);
+    const d=document.createElement('div'); d.className='oroom'+(done[s.id]?' done':'')+(currentId===s.id?' cur':'');
+    d.dataset.id=s.id; Object.assign(d.style,px(OV_POS[s.id])); d.title=s.nombre;
+    if(mini){ d.style.fontWeight='700'; d.innerHTML=`<div style="font-size:9px;color:#5a4a33">${ABBR[s.id]}</div>`; }
+    else{
+      const c=placedCounts(s.id);
+      d.innerHTML=`<div>${s.nombre.replace('Sala ','')}</div><div class="a">${s.w}×${s.h} m · ${Math.round(s.w*s.h)} m²</div>`+
+        ((c.dehum||c.ac||c.dl)?`<div class="ocnt" style="font-size:10.5px">${ICON.dehum(12)}${c.dehum} · ${ICON.ac(12)}${c.ac} · ${ICON.dl(12)}${c.dl}</div>`:'');
+    }
+    d.onclick=()=>onSala(s.id);
+    el.appendChild(d);
   });
-  updMuseoSum();
 }
+function buildOverview(){ buildMuseoMap(document.getElementById('ov'),1,null,openSala); updMuseoSum(); }
 
 /* ============================================================
    WORKSPACE — sala a escala, drag & drop
    ============================================================ */
-let cur=null, PXM=1, units=[], openings=[], sdrag=null, offx=0, offy=0, salaEl=null;
-const MAXW=640, MAXH=520, PAD=0;
-
+let cur=null, PXM=1, units=[], openings=[], salaEl=null;
+const MAXW=620, MAXH=500;
 function openSala(id){
+  if(cur) snapshotSala();
   cur=SALAS.find(s=>s.id===id); units=[]; openings=[];
   document.getElementById('ovCard').classList.add('hide');
-  document.getElementById('wsCard').classList.remove('hide');
+  const ws=document.getElementById('wsCard'); ws.classList.remove('hide');
+  ws.classList.remove('expandin'); void ws.offsetWidth; ws.classList.add('expandin');
   document.getElementById('salaTit').textContent=cur.nombre;
-  document.getElementById('salaTag').textContent=cur.nombre;
-  document.getElementById('salaDims').textContent=
-    `${cur.w} × ${cur.h} m · ${Math.round(cur.w*cur.h)} m² — ${cur.desc}`;
-  PXM = Math.min(MAXW/cur.w, MAXH/cur.h);
+  document.getElementById('salaTag').textContent=Math.round(cur.w*cur.h)+' m²';
+  document.getElementById('salaDims').textContent=`${cur.w} × ${cur.h} m — ${cur.desc}`;
+  PXM=Math.min(MAXW/cur.w, MAXH/cur.h);
   const saved=placed[cur.id];
-  renderSala(saved && saved.closed);
-  buildTray();
-  drawScaleBar();
-  if(saved && saved.units) saved.units.forEach(u=>addUnit(u.kind, Math.min(u.x,cur.w), Math.min(u.y,cur.h)));
+  renderSala(saved&&saved.closed);
+  buildTray(); drawScaleBar();
+  buildMuseoMap(document.getElementById('miniMap'),0.30,cur.id,navTo);
+  if(saved&&saved.units) saved.units.forEach(u=>{ if(EQ[u.kind]) addUnit(u.kind,Math.min(u.x,cur.w),Math.min(u.y,cur.h)); });
   renderStats(); document.getElementById('fbBox').innerHTML='';
-  updateNavButtons();
   window.scrollTo({top:0,behavior:'smooth'});
 }
-function updateNavButtons(){
-  const idx=SALAS.findIndex(s=>s.id===cur.id);
-  document.getElementById('navPrev').disabled = idx<=0;
-  document.getElementById('navNext').disabled = idx>=SALAS.length-1;
-}
-function navSala(dir){
-  const idx=SALAS.findIndex(s=>s.id===cur.id), ni=idx+dir;
-  if(ni>=0 && ni<SALAS.length) openSala(SALAS[ni].id);
-}
-function closeSala(){
+function navTo(id){ if(id!==cur.id) openSala(id); }
+function closeSala(){ snapshotSala();
   document.getElementById('wsCard').classList.add('hide');
   document.getElementById('ovCard').classList.remove('hide');
   buildOverview(); updProgress();
 }
 function resetSala(){ delete placed[cur.id]; savePlaced(); openSala(cur.id); }
+function clampWall(v,max){ return Math.max(0,Math.min(v,max)); }
 
 function renderSala(closedArr){
   salaEl=document.getElementById('sala');
-  const W=cur.w*PXM, H=cur.h*PXM;
-  salaEl.style.width=W+'px'; salaEl.style.height=H+'px'; salaEl.innerHTML='';
-  // exhibición central
+  salaEl.style.width=(cur.w*PXM)+'px'; salaEl.style.height=(cur.h*PXM)+'px'; salaEl.innerHTML='';
   if(cur.exhibit){const e=document.createElement('div');e.className='exhibit';
-    Object.assign(e.style,{left:cur.exhibit.x*PXM+'px',top:cur.exhibit.y*PXM+'px',
-      width:cur.exhibit.w*PXM+'px',height:cur.exhibit.h*PXM+'px'});
+    Object.assign(e.style,{left:cur.exhibit.x*PXM+'px',top:cur.exhibit.y*PXM+'px',width:cur.exhibit.w*PXM+'px',height:cur.exhibit.h*PXM+'px'});
     e.textContent='exhibición'; salaEl.appendChild(e);}
-  // aperturas (restaura estado cerrado si viene guardado)
   cur.openings.forEach((o,i)=>{
     const op={...o,closed:!!(closedArr&&closedArr[i]),i};
     const el=document.createElement('div'); el.className='opening '+(op.closed?'closed':'open');
     el.style.left=clampWall(o.x,cur.w)*PXM+'px'; el.style.top=clampWall(o.y,cur.h)*PXM+'px';
-    el.textContent=op.closed?'🔒':'🔓'; el.title=(o.t==='window'?'Ventana':'Puerta')+' — clic para cerrar';
-    el.onclick=()=>{op.closed=!op.closed; el.className='opening '+(op.closed?'closed':'open');
-      el.textContent=op.closed?'🔒':'🔓'; renderStats(); snapshotSala();};
+    el.textContent=op.closed?'🔒':'🔓'; el.title=(o.t==='window'?'Ventana':'Puerta')+' — clic para cerrar/abrir';
+    el.onclick=()=>{op.closed=!op.closed; el.className='opening '+(op.closed?'closed':'open'); el.textContent=op.closed?'🔒':'🔓'; renderStats(); snapshotSala();};
     op.el=el; salaEl.appendChild(el); openings.push(op);
   });
-  salaEl.onpointerdown=onDown;
 }
-function clampWall(v,max){ return Math.max(0,Math.min(v,max)); }
-
-function drawScaleBar(){
-  const m=5, px=m*PXM;
-  document.getElementById('scaleBar').innerHTML=
-    `<span>Escala:</span><div class="bar" style="width:${px}px"></div><span>${m} m &nbsp;·&nbsp; 1 m = ${PXM.toFixed(1)} px</span>`;
+function drawScaleBar(){ const m=5,px=m*PXM;
+  document.getElementById('scaleBar').innerHTML=`<span>Escala:</span><div class="bar" style="width:${px}px"></div><span>${m} m · 1 m = ${PXM.toFixed(1)} px</span>`;
 }
-
 function buildTray(){
-  const reqD=requiredDehum(cur), reqL=requiredDL(cur);
   const t=document.getElementById('tray');
-  t.innerHTML=`<div class="small muted" style="margin-bottom:6px">Arrastra a la sala <span class="inf">suministro ∞ ilimitado</span> · Meta sugerida:
-     <b>${reqD}</b> deshumidificadores y <b>${reqL}</b> datalogger(s) para ${Math.round(cur.w*cur.h)} m².</div>`;
-  const mk=(kind,label)=>{const c=document.createElement('span');c.className='chip';
-    c.innerHTML=(kind==='dehum'?ICON.dehum(18):ICON.dl(18))+' '+label; c.dataset.kind=kind;
-    c.onpointerdown=e=>spawnDrag(e,kind); t.appendChild(c);};
-  mk('dehum','Deshumidificador'); mk('dl','Datalogger');
-  const hint=document.createElement('div'); hint.className='small muted'; hint.style.marginTop='6px';
-  hint.textContent='Coloca los que necesites (son ilimitados); el evaluador te dice si sobran o faltan.';
-  t.appendChild(hint);
+  t.innerHTML=`<div class="small muted" style="margin-bottom:6px">Arrastra a la sala (ilimitados) · Meta para ${Math.round(cur.w*cur.h)} m²:
+    <b>${requiredN('dehum',cur)}</b> deshumidificadores, <b>${requiredN('ac',cur)}</b> A/C y <b>${requiredN('dl',cur)}</b> datalogger(s).</div>`;
+  ['dehum','ac','dl'].forEach(kind=>{ const c=document.createElement('span'); c.className='chip';
+    c.innerHTML=EQ[kind].icon(18)+' '+EQ[kind].label; c.onpointerdown=e=>spawnDrag(e,kind); t.appendChild(c); });
 }
 
 function addUnit(kind,x,y){
   const u={kind,x,y}; const el=document.createElement('div');
-  el.className='unit '+kind; el.innerHTML=kind==='dehum'?ICON.dehum(20):ICON.dl(20);
-  el.title=kind==='dehum'?'Deshumidificador — arrastra':'Datalogger — arrastra';
-  let cover=null;
-  if(kind==='dehum'){cover=document.createElement('div');cover.className='cover';salaEl.appendChild(cover);}
-  else{cover=document.createElement('div');cover.className='dlz';salaEl.appendChild(cover);}
+  el.className='unit '+EQ[kind].cls; el.innerHTML=EQ[kind].icon(21); el.title=EQ[kind].label+' — arrastra · doble clic retira';
+  const cover=document.createElement('div'); cover.className='cover '+EQ[kind].cls; salaEl.appendChild(cover);
   u.el=el; u.cover=cover;
-  el.onpointerdown=e=>{e.stopPropagation();startDragUnit(e,u);};
+  el.onpointerdown=e=>{e.preventDefault();e.stopPropagation();startDragUnit(e,u);};
   el.ondblclick=e=>{e.stopPropagation();removeUnit(u);};
   salaEl.appendChild(el); units.push(u); placeUnit(u); renderStats();
   return u;
@@ -583,165 +514,102 @@ function addUnit(kind,x,y){
 function removeUnit(u){ u.el.remove(); if(u.cover)u.cover.remove(); units=units.filter(x=>x!==u); renderStats(); snapshotSala(); }
 function placeUnit(u){
   u.el.style.left=u.x*PXM+'px'; u.el.style.top=u.y*PXM+'px';
-  if(u.cover){
-    const r=(u.kind==='dehum'?dehumR():DL_RADIUS_M)*PXM;
-    u.cover.style.left=u.x*PXM+'px'; u.cover.style.top=u.y*PXM+'px';
-    u.cover.style.width=2*r+'px'; u.cover.style.height=2*r+'px';
-  }
+  const r=coverR(u.kind)*PXM;
+  u.cover.style.left=u.x*PXM+'px'; u.cover.style.top=u.y*PXM+'px'; u.cover.style.width=2*r+'px'; u.cover.style.height=2*r+'px';
 }
+function clampUnit(u){ u.x=Math.max(0,Math.min(u.x,cur.w)); u.y=Math.max(0,Math.min(u.y,cur.h)); }
 
-// arrastrar desde la bandeja (crea al soltar dentro de la sala)
-let ghost=null,ghostKind=null;
+let ghost=null;
 function spawnDrag(e,kind){
-  ghostKind=kind; const move=ev=>{
-    const r=salaEl.getBoundingClientRect();
+  e.preventDefault(); document.body.classList.add('dragging'); ghost=null;
+  const move=ev=>{ const r=salaEl.getBoundingClientRect();
     if(ev.clientX>=r.left&&ev.clientX<=r.right&&ev.clientY>=r.top&&ev.clientY<=r.bottom){
       if(!ghost){ghost=addUnit(kind,(ev.clientX-r.left)/PXM,(ev.clientY-r.top)/PXM);}
       else{ghost.x=(ev.clientX-r.left)/PXM;ghost.y=(ev.clientY-r.top)/PXM;clampUnit(ghost);placeUnit(ghost);renderStats();}
-    }
-  };
-  const up=()=>{document.removeEventListener('pointermove',move);document.removeEventListener('pointerup',up);ghost=null;snapshotSala();};
+    }};
+  const up=()=>{document.removeEventListener('pointermove',move);document.removeEventListener('pointerup',up);document.body.classList.remove('dragging');ghost=null;snapshotSala();};
   document.addEventListener('pointermove',move);document.addEventListener('pointerup',up);
 }
-// arrastrar unidad existente
 function startDragUnit(e,u){
-  sdrag=u; u.el.classList.add('dragging'); u.el.setPointerCapture(e.pointerId);
-  const move=ev=>{const r=salaEl.getBoundingClientRect();
-    u.x=(ev.clientX-r.left)/PXM; u.y=(ev.clientY-r.top)/PXM; clampUnit(u); placeUnit(u); renderStats();};
-  const up=()=>{u.el.classList.remove('dragging');document.removeEventListener('pointermove',move);document.removeEventListener('pointerup',up);sdrag=null;snapshotSala();};
+  u.el.classList.add('dragging'); document.body.classList.add('dragging');
+  try{u.el.setPointerCapture(e.pointerId);}catch(_){}
+  const move=ev=>{ const r=salaEl.getBoundingClientRect();
+    u.x=(ev.clientX-r.left)/PXM; u.y=(ev.clientY-r.top)/PXM; clampUnit(u); placeUnit(u); renderStats(); };
+  const up=()=>{u.el.classList.remove('dragging');document.removeEventListener('pointermove',move);document.removeEventListener('pointerup',up);document.body.classList.remove('dragging');snapshotSala();};
   document.addEventListener('pointermove',move);document.addEventListener('pointerup',up);
 }
-function onDown(e){/* clic vacío: nada */}
-function clampUnit(u){ u.x=Math.max(0,Math.min(u.x,cur.w)); u.y=Math.max(0,Math.min(u.y,cur.h)); }
 
 /* ============================================================
    MÉTRICAS Y EVALUACIÓN
    ============================================================ */
 function dist(ax,ay,bx,by){return Math.hypot(ax-bx,ay-by);}
-function coveragePct(){
-  // muestreo en malla de 0.4 m dentro de la sala
-  const step=0.4; let inside=0,covered=0;
-  const dh=units.filter(u=>u.kind==='dehum');
-  for(let x=step/2;x<cur.w;x+=step)for(let y=step/2;y<cur.h;y+=step){
-    inside++;
-    for(const d of dh){ if(dist(x,y,d.x,d.y)<=dehumR()){covered++;break;} }
-  }
-  return inside? covered/inside : 0;
+function coveragePct(kind){
+  const step=0.4; let inside=0,covered=0; const us=units.filter(u=>u.kind===kind); const R=coverR(kind);
+  for(let x=step/2;x<cur.w;x+=step)for(let y=step/2;y<cur.h;y+=step){ inside++;
+    for(const d of us){ if(dist(x,y,d.x,d.y)<=R){covered++;break;} } }
+  return inside?covered/inside:0;
 }
-function nearestOpening(u){
-  let best=1e9; openings.forEach(o=>{best=Math.min(best,dist(u.x,u.y,clampWall(o.x,cur.w),clampWall(o.y,cur.h)));}); return best;
-}
+function nearestOpening(u){ let best=1e9; openings.forEach(o=>best=Math.min(best,dist(u.x,u.y,clampWall(o.x,cur.w),clampWall(o.y,cur.h)))); return best; }
 function renderStats(){
-  const dh=units.filter(u=>u.kind==='dehum'), dl=units.filter(u=>u.kind==='dl');
-  const cov=coveragePct(), closed=openings.filter(o=>o.closed).length;
-  const box=document.getElementById('statBox');
-  box.innerHTML=`
-    <div class="s"><span class="small muted">Deshumidificadores</span><b>${dh.length} / ${requiredDehum(cur)}</b><span class="small muted">necesarios</span></div>
-    <div class="s"><span class="small muted">Dataloggers</span><b>${dl.length} / ${requiredDL(cur)}</b><span class="small muted">recomendados</span></div>
-    <div class="s"><span class="small muted">Área cubierta</span><b>${Math.round(cov*100)}%</b><span class="small muted">por deshumidificadores</span></div>
-    <div class="s"><span class="small muted">Aperturas cerradas</span><b>${closed} / ${openings.length}</b><span class="small muted">🔒 controla la HR</span></div>`;
+  const nd=units.filter(u=>u.kind==='dehum').length, na=units.filter(u=>u.kind==='ac').length, nl=units.filter(u=>u.kind==='dl').length;
+  const closed=openings.filter(o=>o.closed).length;
+  document.getElementById('statBox').innerHTML=`
+    <div class="s"><span class="small muted">Deshumidificadores (HR)</span><b>${nd} / ${requiredN('dehum',cur)}</b><span class="small muted">cobertura ${Math.round(coveragePct('dehum')*100)}%</span></div>
+    <div class="s"><span class="small muted">Aires acond. (22 °C)</span><b>${na} / ${requiredN('ac',cur)}</b><span class="small muted">cobertura ${Math.round(coveragePct('ac')*100)}%</span></div>
+    <div class="s"><span class="small muted">Dataloggers</span><b>${nl} / ${requiredN('dl',cur)}</b><span class="small muted">monitoreo</span></div>
+    <div class="s"><span class="small muted">Aperturas cerradas</span><b>${closed} / ${openings.length}</b><span class="small muted">🔒 controla el ambiente</span></div>`;
 }
 function evaluarSala(){
-  const dh=units.filter(u=>u.kind==='dehum'), dl=units.filter(u=>u.kind==='dl');
-  const cov=coveragePct(), reqD=requiredDehum(cur), reqL=requiredDL(cur);
+  const dh=units.filter(u=>u.kind==='dehum'), ac=units.filter(u=>u.kind==='ac'), dl=units.filter(u=>u.kind==='dl');
+  const area=Math.round(cur.w*cur.h);
+  const covD=coveragePct('dehum'), covA=coveragePct('ac');
+  const reqD=requiredN('dehum',cur), reqA=requiredN('ac',cur), reqL=requiredN('dl',cur);
   const closed=openings.filter(o=>o.closed).length, total=openings.length;
-  const good=[], bad=[];
+  const good=[],bad=[];
 
-  if(dh.length>=reqD) good.push(`Suficientes deshumidificadores (${dh.length} para ${Math.round(cur.w*cur.h)} m²).`);
-  else bad.push(`Faltan deshumidificadores: pusiste ${dh.length} y para ${Math.round(cur.w*cur.h)} m² se necesitan ${reqD} (uno cada ${DEHUM_COVER_M2} m²).`);
+  if(dh.length>=reqD && covD>=0.85) good.push(`Humedad cubierta: ${dh.length} deshumidificador(es), ${Math.round(covD*100)}% del área.`);
+  else if(dh.length<reqD) bad.push(`Faltan deshumidificadores: ${dh.length} de ${reqD} (uno cada ${EQ.dehum.need} m² para ${area} m²).`);
+  else bad.push(`Reparte los deshumidificadores: solo cubren el ${Math.round(covD*100)}% (deja zonas con HR alta).`);
 
-  if(cov>=0.85) good.push(`La cobertura llega al ${Math.round(cov*100)}% del área — casi sin zonas muertas.`);
-  else bad.push(`Cobertura baja (${Math.round(cov*100)}%). Reparte los deshumidificadores para que sus círculos cubran toda la sala, sin encimarlos.`);
+  if(ac.length>=reqA && covA>=0.85) good.push(`Temperatura cubierta a 22 °C: ${ac.length} A/C, ${Math.round(covA*100)}% del área.`);
+  else if(ac.length<reqA) bad.push(`Faltan aires acondicionados: ${ac.length} de ${reqA} (uno cada ${EQ.ac.need} m²) para sostener 22 °C.`);
+  else bad.push(`Reparte los A/C: solo enfrían el ${Math.round(covA*100)}% de la sala.`);
 
   if(dl.length>=reqL) good.push(`Dataloggers suficientes (${dl.length}).`);
-  else bad.push(`Coloca al menos ${reqL} datalogger(s) para representar el microclima de esta sala.`);
+  else bad.push(`Coloca al menos ${reqL} datalogger(s) para vigilar T° y HR de esta sala.`);
+  const dlBad=dl.filter(u=>nearestOpening(u)<DL_MIN_CLEAR_M);
+  if(dl.length && dlBad.length) bad.push(`${dlBad.length} datalogger(s) muy cerca de una puerta/ventana (< ${DL_MIN_CLEAR_M} m): medirían el aire de afuera.`);
+  else if(dl.length) good.push(`Los dataloggers están alejados de puertas y ventanas.`);
+  const dlOn=dl.filter(u=>[...dh,...ac].some(d=>dist(u.x,u.y,d.x,d.y)<1.0));
+  if(dlOn.length) bad.push(`Aleja los dataloggers ~1 m de los equipos: pegados a un A/C o deshumidificador la lectura no representa la sala.`);
 
-  // dataloggers lejos de aperturas
-  const dlBad = dl.filter(u=>nearestOpening(u)<DL_MIN_CLEAR_M);
-  if(dl.length){
-    if(dlBad.length===0) good.push(`Los dataloggers están a más de ${DL_MIN_CLEAR_M} m de puertas y ventanas.`);
-    else bad.push(`${dlBad.length} datalogger(s) están demasiado cerca de una puerta/ventana (< ${DL_MIN_CLEAR_M} m): medirían el aire de afuera, no el de la colección.`);
-  }
-  // datalogger no encima del deshumidificador
-  const dlOnDehum = dl.filter(u=>dh.some(d=>dist(u.x,u.y,d.x,d.y)<1.0));
-  if(dlOnDehum.length) bad.push(`Aleja los dataloggers del propio deshumidificador (mínimo ~1 m): junto a él la lectura no representa la sala.`);
+  if(total){ if(closed===total) good.push(`Puertas y ventanas cerradas 🔒 — el control de T° y HR funciona.`);
+    else bad.push(`Quedan ${total-closed} apertura(s) abiertas 🔓: entra el aire de afuera (${Math.round(climaT)} °C / ${Math.round(climaRH)}% HR) y los equipos no sostienen 22 °C ni 50 % HR.`); }
 
-  if(total){
-    if(closed===total) good.push(`Todas las puertas y ventanas cerradas 🔒 — el control de humedad puede funcionar.`);
-    else bad.push(`Quedan ${total-closed} apertura(s) abiertas 🔓: entra la humedad de afuera (${(+tIn.value)||40} °C) y los deshumidificadores no sostienen la HR.`);
-  }
-
-  const ok = bad.length===0;
-  const fb=document.getElementById('fbBox');
-  fb.className='fb '+(ok?'ok':'no');
+  const ok=bad.length===0;
+  const fb=document.getElementById('fbBox'); fb.className='fb '+(ok?'ok':'no');
   fb.innerHTML=`<b>${ok?'✅ ¡Sala lista!':'⚠️ Aún se puede mejorar'}</b>`+
     (good.length?`<ul>${good.map(g=>`<li>✔️ ${g}</li>`).join('')}</ul>`:'')+
     (bad.length?`<div style="margin-top:6px"><b>Ajusta:</b><ul>${bad.map(b=>`<li>• ${b}</li>`).join('')}</ul></div>`:'');
+  snapshotSala();
   if(ok){ done[cur.id]=true; saveDone(); updProgress();
-    fb.innerHTML+=`<div style="margin-top:8px">Guardada como completa. <button class="btn" onclick="closeSala()">◀ Volver y elegir otra sala</button></div>`;
-  }
+    fb.innerHTML+=`<div style="margin-top:8px">Guardada como completa. <button class="btn" onclick="closeSala()">◀ Elegir otra sala</button></div>`; }
 }
 
 /* ============================================================
-   AJUSTES — medidas reales y cobertura (editable, se guarda en el navegador)
+   INIT
    ============================================================ */
-function buildCfgUI(){
-  const box=document.getElementById('cfgSalas');
-  box.innerHTML=SALAS.map(s=>`
-    <div class="s">
-      <div style="font-weight:700">${s.nombre}</div>
-      <div class="row" style="gap:6px;margin-top:4px">
-        <label class="small muted">ancho
-          <input type="number" class="cfgW" data-id="${s.id}" value="${s.w}" min="1" step="0.1" style="width:64px">
-        </label>
-        <label class="small muted">largo
-          <input type="number" class="cfgH" data-id="${s.id}" value="${s.h}" min="1" step="0.1" style="width:64px">
-        </label>
-        <span class="small muted">m</span>
-      </div>
-      <div class="small muted" style="margin-top:2px"><span class="cfgArea" data-id="${s.id}">${Math.round(s.w*s.h)}</span> m² · ~<span class="cfgNeed" data-id="${s.id}">${requiredDehum(s)}</span> deshum.</div>
-    </div>`).join('');
-  box.querySelectorAll('.cfgW,.cfgH').forEach(inp=>inp.addEventListener('input',onDimEdit));
-}
-function onDimEdit(e){
-  const id=e.target.dataset.id, s=SALAS.find(x=>x.id===id);
-  const w=parseFloat(document.querySelector('.cfgW[data-id="'+id+'"]').value);
-  const h=parseFloat(document.querySelector('.cfgH[data-id="'+id+'"]').value);
-  if(w>0) s.w=w; if(h>0) s.h=h;
-  applyDims(s); saveCfg();
-  document.querySelector('.cfgArea[data-id="'+id+'"]').textContent=Math.round(s.w*s.h);
-  document.querySelector('.cfgNeed[data-id="'+id+'"]').textContent=requiredDehum(s);
-  buildOverview();
-  if(cur && cur.id===id && !document.getElementById('wsCard').classList.contains('hide')) openSala(id);
-}
-const cfgCover=document.getElementById('cfgCover'), cfgDlr=document.getElementById('cfgDlr');
-function syncCoverUI(){
-  document.getElementById('cfgCoverV').textContent=DEHUM_COVER_M2;
-  document.getElementById('cfgCoverV2').textContent=DEHUM_COVER_M2;
-  document.getElementById('cfgDlrV').textContent=DL_RADIUS_M.toFixed(1);
-  cfgCover.value=DEHUM_COVER_M2; cfgDlr.value=DL_RADIUS_M;
-}
-cfgCover.addEventListener('input',()=>{ DEHUM_COVER_M2=+cfgCover.value; saveCfg(); syncCoverUI(); refreshEquipLabels(); buildCfgUI();
-  if(cur && !document.getElementById('wsCard').classList.contains('hide')) openSala(cur.id); });
-cfgDlr.addEventListener('input',()=>{ DL_RADIUS_M=+cfgDlr.value; saveCfg(); syncCoverUI(); refreshEquipLabels();
-  if(cur && !document.getElementById('wsCard').classList.contains('hide')) openSala(cur.id); });
-function resetCfg(){
-  try{ localStorage.removeItem('puuc_s4_cfg'); }catch(e){}
-  DEHUM_COVER_M2=60; DL_RADIUS_M=3.0;
-  SALAS.forEach(s=>{ s.w=s._w0; s.h=s._h0; applyDims(s); });
-  buildCfgUI(); syncCoverUI(); refreshEquipLabels(); buildOverview();
-}
-
 function paintIcons(){
   document.getElementById('eqIcoD').innerHTML=ICON.dehum(30);
+  document.getElementById('eqIcoA').innerHTML=ICON.ac(30);
   document.getElementById('eqIcoL').innerHTML=ICON.dl(30);
   document.getElementById('lgD').innerHTML=ICON.dehum(18);
+  document.getElementById('lgA').innerHTML=ICON.ac(18);
   document.getElementById('lgL').innerHTML=ICON.dl(18);
+  document.getElementById('covD').textContent=EQ.dehum.cover+' m²';
+  document.getElementById('covA').textContent=EQ.ac.cover+' m²';
 }
-
-/* init */
-loadCfg(); refreshEquipLabels(); buildCfgUI(); syncCoverUI(); paintIcons();
-buildOverview(); updProgress();
+paintIcons(); buildOverview(); updProgress(); updClima(); fetchWeather();
 </script>
 </body>
 </html>
