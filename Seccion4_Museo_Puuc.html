@@ -38,6 +38,7 @@ h3{font-size:15px;margin:.4em 0}
 @media(max-width:640px){.climate{grid-template-columns:1fr}}
 .metric{background:#f7f9fb;border:1px solid var(--border);border-radius:10px;padding:10px}
 .metric b{font-size:26px;display:block;line-height:1.1}
+.metric .small b{font-size:inherit;display:inline;line-height:inherit}
 .slider{width:100%}
 .pill{font-weight:700;padding:2px 8px;border-radius:8px}
 .pill.ok{background:#e6f4ec;color:var(--ok)} .pill.warn{background:#fbf1dc;color:var(--warn)} .pill.bad{background:#fbe6e2;color:var(--bad)}
@@ -167,6 +168,30 @@ kbd{background:#eef1f4;border:1px solid var(--border);border-radius:5px;padding:
     </div>
   </div>
 
+  <!-- AJUSTES -->
+  <details class="card" id="cfgCard">
+    <summary style="cursor:pointer;font-weight:700;font-size:17px">⚙️ Ajustes — medidas reales y cobertura</summary>
+    <p class="small muted" style="margin-top:8px">Escribe aquí las <b>cotas reales</b> de cada sala (interior, en metros) cuando las midas en sitio, y la
+      <b>cobertura</b> del deshumidificador según su ficha técnica. Todo se redibuja a escala y se guarda en este navegador.</p>
+    <div id="cfgSalas" class="stat"></div>
+    <div class="row" style="margin-top:10px">
+      <div class="metric" style="flex:1;min-width:180px">
+        <label class="small muted">Cobertura por deshumidificador (m²)</label>
+        <input class="slider" id="cfgCover" type="range" min="25" max="140" step="5" value="60">
+        <div class="small">Actual: <b id="cfgCoverV">60</b> m² · 1 equipo cada <b id="cfgCoverV2">60</b> m²</div>
+      </div>
+      <div class="metric" style="flex:1;min-width:180px">
+        <label class="small muted">Radio del microclima del datalogger (m)</label>
+        <input class="slider" id="cfgDlr" type="range" min="1.5" max="6" step="0.5" value="3">
+        <div class="small">Actual: <b id="cfgDlrV">3.0</b> m de radio</div>
+      </div>
+    </div>
+    <div class="row" style="margin-top:8px">
+      <button class="btn ghost" onclick="resetCfg()">↺ Restablecer medidas de fábrica</button>
+      <span class="small muted">Las medidas de fábrica son aproximadas (la escala no venía rotulada en el plano).</span>
+    </div>
+  </details>
+
   <!-- OVERVIEW -->
   <div class="card" id="ovCard">
     <h2>🗺️ Plano del museo — elige una sala</h2>
@@ -222,10 +247,10 @@ kbd{background:#eef1f4;border:1px solid var(--border);border-radius:5px;padding:
    DATOS — todo lo editable está aquí arriba
    Medidas interiores APROXIMADAS en metros (confirmar con el plano oficial).
    ============================================================ */
-const DEHUM_COVER_M2 = 60;    // cobertura de diseño por deshumidificador (m²)
-const DL_RADIUS_M    = 3.0;   // radio (m) del microclima que "representa" un datalogger
+let DEHUM_COVER_M2 = 60;    // cobertura de diseño por deshumidificador (m²) — editable en Ajustes
+let DL_RADIUS_M    = 3.0;   // radio (m) del microclima que "representa" un datalogger — editable
 const DL_MIN_CLEAR_M = 1.5;   // distancia mínima de un datalogger a puertas/ventanas (m)
-const DEHUM_COVER_R  = Math.sqrt(DEHUM_COVER_M2/Math.PI); // radio equivalente de cobertura (m)
+const dehumR = () => Math.sqrt(DEHUM_COVER_M2/Math.PI); // radio equivalente de cobertura (m)
 
 // openings: posición en metros dentro de la sala (x desde izq, y desde arriba), sobre un muro.
 // tipo: 'door' | 'window'
@@ -274,6 +299,34 @@ const SALAS = [
 const requiredDehum = s => Math.max(1, Math.ceil((s.w*s.h)/DEHUM_COVER_M2));
 const requiredDL    = s => Math.max(1, Math.ceil((s.w*s.h)/150)); // ~1 por cada 150 m² (zona representativa)
 
+/* Guardamos las medidas de fábrica para poder reescalar aperturas y exhibición
+   cuando el museo escriba sus cotas reales en Ajustes. */
+SALAS.forEach(s=>{ s._w0=s.w; s._h0=s.h;
+  s._openings0=JSON.parse(JSON.stringify(s.openings));
+  s._exhibit0=Object.assign({},s.exhibit); });
+function applyDims(s){
+  const fx=s.w/s._w0, fy=s.h/s._h0;                 // escala respecto a la medida de fábrica
+  s.openings = s._openings0.map(o=>({t:o.t, x:o.x*fx, y:o.y*fy}));  // 0→0 y borde→borde: siguen sobre el muro
+  s.exhibit  = {x:s._exhibit0.x*fx, y:s._exhibit0.y*fy, w:s._exhibit0.w*fx, h:s._exhibit0.h*fy};
+}
+/* Config editable por el usuario (medidas reales + cobertura), guardada en el navegador */
+function loadCfg(){
+  try{ const c=JSON.parse(localStorage.getItem('puuc_s4_cfg')||'{}');
+    if(c.cover) DEHUM_COVER_M2=+c.cover;
+    if(c.dlr)   DL_RADIUS_M=+c.dlr;
+    if(c.salas) SALAS.forEach(s=>{ const d=c.salas[s.id]; if(d){ if(d.w>0)s.w=+d.w; if(d.h>0)s.h=+d.h; } });
+  }catch(e){}
+  SALAS.forEach(applyDims);
+}
+function saveCfg(){
+  const salas={}; SALAS.forEach(s=>salas[s.id]={w:s.w,h:s.h});
+  try{ localStorage.setItem('puuc_s4_cfg',JSON.stringify({cover:DEHUM_COVER_M2,dlr:DL_RADIUS_M,salas})); }catch(e){}
+}
+function refreshEquipLabels(){
+  document.getElementById('covLbl').textContent=DEHUM_COVER_M2+' m²';
+  document.getElementById('dlLbl').textContent=DL_RADIUS_M.toFixed(1)+' m';
+}
+
 /* ============================================================
    CLIMA — índice de calor (fórmula NWS Rothfusz)
    ============================================================ */
@@ -301,8 +354,6 @@ function updClima(){
   el.className='small '+ (cls==='ok'?'muted':'') ;
 }
 rh.addEventListener('input',updClima); updClima();
-document.getElementById('covLbl').textContent=DEHUM_COVER_M2+' m²';
-document.getElementById('dlLbl').textContent=DL_RADIUS_M.toFixed(1)+' m';
 
 /* ============================================================
    ESTADO
@@ -442,7 +493,7 @@ function removeUnit(u){ u.el.remove(); if(u.cover)u.cover.remove(); units=units.
 function placeUnit(u){
   u.el.style.left=u.x*PXM+'px'; u.el.style.top=u.y*PXM+'px';
   if(u.cover){
-    const r=(u.kind==='dehum'?DEHUM_COVER_R:DL_RADIUS_M)*PXM;
+    const r=(u.kind==='dehum'?dehumR():DL_RADIUS_M)*PXM;
     u.cover.style.left=u.x*PXM+'px'; u.cover.style.top=u.y*PXM+'px';
     u.cover.style.width=2*r+'px'; u.cover.style.height=2*r+'px';
   }
@@ -482,7 +533,7 @@ function coveragePct(){
   const dh=units.filter(u=>u.kind==='dehum');
   for(let x=step/2;x<cur.w;x+=step)for(let y=step/2;y<cur.h;y+=step){
     inside++;
-    for(const d of dh){ if(dist(x,y,d.x,d.y)<=DEHUM_COVER_R){covered++;break;} }
+    for(const d of dh){ if(dist(x,y,d.x,d.y)<=dehumR()){covered++;break;} }
   }
   return inside? covered/inside : 0;
 }
@@ -540,7 +591,58 @@ function evaluarSala(){
   }
 }
 
+/* ============================================================
+   AJUSTES — medidas reales y cobertura (editable, se guarda en el navegador)
+   ============================================================ */
+function buildCfgUI(){
+  const box=document.getElementById('cfgSalas');
+  box.innerHTML=SALAS.map(s=>`
+    <div class="s">
+      <div style="font-weight:700">${s.nombre}</div>
+      <div class="row" style="gap:6px;margin-top:4px">
+        <label class="small muted">ancho
+          <input type="number" class="cfgW" data-id="${s.id}" value="${s.w}" min="1" step="0.1" style="width:64px">
+        </label>
+        <label class="small muted">largo
+          <input type="number" class="cfgH" data-id="${s.id}" value="${s.h}" min="1" step="0.1" style="width:64px">
+        </label>
+        <span class="small muted">m</span>
+      </div>
+      <div class="small muted" style="margin-top:2px"><span class="cfgArea" data-id="${s.id}">${Math.round(s.w*s.h)}</span> m² · ~<span class="cfgNeed" data-id="${s.id}">${requiredDehum(s)}</span> deshum.</div>
+    </div>`).join('');
+  box.querySelectorAll('.cfgW,.cfgH').forEach(inp=>inp.addEventListener('input',onDimEdit));
+}
+function onDimEdit(e){
+  const id=e.target.dataset.id, s=SALAS.find(x=>x.id===id);
+  const w=parseFloat(document.querySelector('.cfgW[data-id="'+id+'"]').value);
+  const h=parseFloat(document.querySelector('.cfgH[data-id="'+id+'"]').value);
+  if(w>0) s.w=w; if(h>0) s.h=h;
+  applyDims(s); saveCfg();
+  document.querySelector('.cfgArea[data-id="'+id+'"]').textContent=Math.round(s.w*s.h);
+  document.querySelector('.cfgNeed[data-id="'+id+'"]').textContent=requiredDehum(s);
+  buildOverview();
+  if(cur && cur.id===id && !document.getElementById('wsCard').classList.contains('hide')) openSala(id);
+}
+const cfgCover=document.getElementById('cfgCover'), cfgDlr=document.getElementById('cfgDlr');
+function syncCoverUI(){
+  document.getElementById('cfgCoverV').textContent=DEHUM_COVER_M2;
+  document.getElementById('cfgCoverV2').textContent=DEHUM_COVER_M2;
+  document.getElementById('cfgDlrV').textContent=DL_RADIUS_M.toFixed(1);
+  cfgCover.value=DEHUM_COVER_M2; cfgDlr.value=DL_RADIUS_M;
+}
+cfgCover.addEventListener('input',()=>{ DEHUM_COVER_M2=+cfgCover.value; saveCfg(); syncCoverUI(); refreshEquipLabels(); buildCfgUI();
+  if(cur && !document.getElementById('wsCard').classList.contains('hide')) openSala(cur.id); });
+cfgDlr.addEventListener('input',()=>{ DL_RADIUS_M=+cfgDlr.value; saveCfg(); syncCoverUI(); refreshEquipLabels();
+  if(cur && !document.getElementById('wsCard').classList.contains('hide')) openSala(cur.id); });
+function resetCfg(){
+  try{ localStorage.removeItem('puuc_s4_cfg'); }catch(e){}
+  DEHUM_COVER_M2=60; DL_RADIUS_M=3.0;
+  SALAS.forEach(s=>{ s.w=s._w0; s.h=s._h0; applyDims(s); });
+  buildCfgUI(); syncCoverUI(); refreshEquipLabels(); buildOverview();
+}
+
 /* init */
+loadCfg(); refreshEquipLabels(); buildCfgUI(); syncCoverUI();
 buildOverview(); updProgress();
 </script>
 </body>

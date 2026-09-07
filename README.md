@@ -13,6 +13,7 @@ Sobre el plano real del museo (las **5 salas** alrededor del Patio Central con l
 - **Datalogger HTC-2** (T°/HR) — regla de colocación: donde represente a la colección, lejos de puertas/ventanas y del propio deshumidificador.
 - **Clima real** — 40 °C con sensación térmica (índice de calor) según la humedad; meta de conservación ≈ 50 % HR.
 - **Cerrar puertas y ventanas** para que el control de humedad funcione.
+- **⚙️ Ajustes** — el museo puede escribir las **cotas reales** de cada sala (ancho/largo en metros) y la **cobertura** del deshumidificador sin tocar código; todo se redibuja a escala y se guarda en el navegador.
 - Avance guardado por navegador (localStorage): las salas terminadas quedan ✓.
 
 ## Salas
@@ -25,7 +26,7 @@ Sobre el plano real del museo (las **5 salas** alrededor del Patio Central con l
 | Poniente | 6 × 25 m | 150 m² |
 | Temporal | 6 × 25 m | 150 m² |
 
-> **Nota sobre la escala:** el plano oficial trae cotas en metros y área total **978.3 m²**, pero la casilla de escala no viene rotulada, así que las medidas por sala son **aproximadas** (derivadas de las proporciones del plano). Son editables en el bloque `SALAS` del código; al cambiarlas, el juego se redibuja a escala automáticamente.
+> **Nota sobre la escala:** el plano oficial trae cotas en metros y área total **978.3 m²**, pero la casilla de escala no viene rotulada, así que las medidas por sala son **aproximadas** (derivadas de las proporciones del plano). Corrígelas con las cotas reales desde **⚙️ Ajustes** dentro de la herramienta (o en el bloque `SALAS` del código); al cambiarlas, el juego se redibuja a escala automáticamente.
 
 ## Cómo usarlo
 
