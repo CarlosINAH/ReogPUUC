@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sección 4 · Museo del Puuc — Deshumidificadores y dataloggers</title>
+<style>
+:root{
+  --bg:#eef1f4; --panel:#ffffff; --ink:#1e2732; --sub:#5a6675; --border:#d3dae2;
+  --brand:#7a5a2e; --brand2:#b07b34; --accent:#1f7a6b; --accent2:#2ea58f;
+  --ok:#1f8a4c; --warn:#c9871a; --bad:#c0392b; --line:#c9d2db;
+  --patio:#e7ddc7; --wall:#5b4a33; --room:#f6f2ea; --roomsel:#fff6e6;
+  --cover:rgba(46,165,143,.18); --coverln:rgba(31,122,107,.55);
+  --dl:#1f6fb0;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+.wrap{max-width:1040px;margin:0 auto;padding:14px}
+h1{font-size:20px;margin:.2em 0}
+h2{font-size:17px;margin:.6em 0 .2em}
+h3{font-size:15px;margin:.4em 0}
+.muted{color:var(--sub)}
+.small{font-size:12.5px}
+.tag{display:inline-block;background:#eef4f2;color:var(--accent);border:1px solid #cfe4de;border-radius:999px;padding:1px 9px;font-size:12px;font-weight:600}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:14px;margin:12px 0;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.spacer{flex:1}
+.btn{background:var(--accent);color:#fff;border:0;border-radius:9px;padding:9px 15px;font-size:14px;font-weight:600;cursor:pointer}
+.btn:hover{background:var(--accent2)}
+.btn.ghost{background:#eef1f4;color:var(--ink);border:1px solid var(--border)}
+.btn.ghost:hover{background:#e3e8ee}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.hd{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.logo{width:40px;height:40px;border:2px solid var(--brand);border-radius:8px;display:grid;place-items:center;color:var(--brand);font-weight:800;font-size:18px;background:#fff}
+
+/* CLIMA */
+.climate{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:640px){.climate{grid-template-columns:1fr}}
+.metric{background:#f7f9fb;border:1px solid var(--border);border-radius:10px;padding:10px}
+.metric b{font-size:26px;display:block;line-height:1.1}
+.slider{width:100%}
+.pill{font-weight:700;padding:2px 8px;border-radius:8px}
+.pill.ok{background:#e6f4ec;color:var(--ok)} .pill.warn{background:#fbf1dc;color:var(--warn)} .pill.bad{background:#fbe6e2;color:var(--bad)}
+
+/* EQUIPO */
+.equip{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:640px){.equip{grid-template-columns:1fr}}
+.eq{border:1px solid var(--border);border-radius:10px;padding:10px;background:#fff}
+.eq .ico{font-size:26px}
+.eq table{border-collapse:collapse;width:100%;font-size:12.5px;margin-top:6px}
+.eq td{padding:2px 4px;border-bottom:1px dotted #e2e8ee}
+.eq td:first-child{color:var(--sub)}
+
+/* OVERVIEW PLANO */
+.ovwrap{overflow:auto}
+.ov{position:relative;width:760px;height:600px;margin:6px auto;background:#f3efe6;border:2px solid var(--wall);border-radius:6px}
+.oroom{position:absolute;border:2px solid var(--wall);background:var(--room);border-radius:3px;cursor:pointer;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;font-weight:700;color:#4a3f2e;transition:background .15s;padding:4px}
+.oroom:hover{background:var(--roomsel)}
+.oroom .a{font-size:11px;font-weight:600;color:var(--sub)}
+.oroom.done{background:#e7f5ec;border-color:#3a9c63}
+.oroom.done::after{content:"✓";position:absolute;top:3px;right:6px;color:#2f9a57;font-weight:900}
+.oserv{position:absolute;border:1px dashed #b9a988;background:#efe9dc;border-radius:3px;font-size:10px;color:#8a7b5c;display:grid;place-items:center;text-align:center;padding:2px}
+.opatio{position:absolute;background:var(--patio);border:2px dashed #c3b389;border-radius:4px;display:grid;place-items:center;color:#8a7a55;font-weight:700}
+.ocasa{width:70px;height:38px;border:2px solid #a58f63;border-radius:60px;background:#f0e8d5;display:grid;place-items:center;font-size:9px;color:#7a6a45}
+
+/* WORKSPACE SALA */
+.svwrap{overflow:auto;background:#fbfaf7;border:1px solid var(--border);border-radius:10px;padding:8px}
+.sala{position:relative;margin:6px auto;background:#efeadf;border:3px solid var(--wall);border-radius:3px;user-select:none;touch-action:none}
+.exhibit{position:absolute;border:2px dashed #b3a686;border-radius:4px;background:rgba(255,255,255,.35);pointer-events:none;display:grid;place-items:center;color:#9a8c6a;font-size:11px}
+.opening{position:absolute;width:26px;height:26px;border-radius:6px;display:grid;place-items:center;cursor:pointer;font-size:15px;z-index:6;background:#fff;border:1px solid var(--line);transform:translate(-50%,-50%)}
+.opening.open{background:#fdece9;border-color:#e5b4ab}
+.opening.closed{background:#e9f5ee;border-color:#a9d8bd}
+.unit{position:absolute;width:30px;height:30px;border-radius:8px;display:grid;place-items:center;font-size:17px;cursor:grab;z-index:8;box-shadow:0 2px 5px rgba(0,0,0,.25);transform:translate(-50%,-50%);border:2px solid #fff}
+.unit.dehum{background:#e8f6f2}
+.unit.dl{background:#e6f0fa}
+.unit.dragging{cursor:grabbing;z-index:30;box-shadow:0 8px 18px rgba(0,0,0,.35)}
+.cover{position:absolute;border-radius:50%;background:var(--cover);border:1.5px solid var(--coverln);z-index:4;pointer-events:none;transform:translate(-50%,-50%)}
+.dlz{position:absolute;border-radius:50%;border:1.5px dashed rgba(31,111,176,.5);z-index:4;pointer-events:none;transform:translate(-50%,-50%)}
+.tray{border:1px dashed var(--line);border-radius:10px;padding:10px;margin-top:10px;background:#fff}
+.chip{display:inline-flex;align-items:center;gap:6px;background:#f2f5f8;border:1px solid var(--border);border-radius:999px;padding:6px 12px;margin:4px;cursor:grab;font-size:13px;font-weight:600}
+.chip:active{cursor:grabbing}
+.scalebar{display:flex;align-items:center;gap:6px;margin:8px 0;font-size:12px;color:var(--sub)}
+.scalebar .bar{height:8px;border:1px solid #333;border-top:0;position:relative}
+.stat{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-top:8px}
+.stat .s{background:#f7f9fb;border:1px solid var(--border);border-radius:9px;padding:8px}
+.stat .s b{font-size:18px;display:block}
+.fb{border-radius:10px;padding:10px;margin-top:10px;font-size:13.5px}
+.fb.ok{background:#eaf6ee;border:1px solid #b6ddc4}
+.fb.no{background:#fbeeea;border:1px solid #e6c1b7}
+.fb ul{margin:6px 0 0;padding-left:18px} .fb li{margin:2px 0}
+.legend{font-size:12px;color:var(--sub);display:flex;gap:14px;flex-wrap:wrap;margin-top:6px}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.dot{width:12px;height:12px;border-radius:50%;display:inline-block}
+.note{background:#fff8e9;border:1px solid #f0dcae;border-radius:10px;padding:10px;font-size:12.5px}
+kbd{background:#eef1f4;border:1px solid var(--border);border-radius:5px;padding:0 5px;font-size:12px}
+.hide{display:none}
+.progressbar{height:10px;background:#e3e8ee;border-radius:999px;overflow:hidden}
+.progressbar>i{display:block;height:100%;background:var(--accent2)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hd">
+    <div class="logo">卅</div>
+    <div>
+      <h1>Sección 4 · Deshumidificadores y dataloggers</h1>
+      <div class="muted small">Museo Arqueológico del Puuc · Zona Arqueológica de Kabah · Método RE-ORG (INAH)</div>
+    </div>
+    <div class="spacer"></div>
+    <span class="tag" id="progTag">0 / 5 salas</span>
+  </div>
+
+  <!-- CLIMA -->
+  <div class="card">
+    <h2>🌡️ Clima de la zona (datos reales)</h2>
+    <div class="climate">
+      <div class="metric">
+        <span class="small muted">Temperatura exterior</span>
+        <b>40&nbsp;°C</b>
+        <span class="small muted">Zona Puuc, Yucatán — época cálida</span>
+      </div>
+      <div class="metric">
+        <span class="small muted">Sensación térmica (índice de calor) a HR = <span id="rhVal">60</span>%</span>
+        <b id="hiVal">—</b>
+        <span class="small muted" id="hiWho">—</span>
+      </div>
+    </div>
+    <div style="margin-top:10px">
+      <label class="small muted">Humedad relativa del aire (ajusta para ver la sensación): <b id="rhVal2">60</b>%</label>
+      <input class="slider" id="rh" type="range" min="20" max="95" value="60" step="1">
+    </div>
+    <div class="note" style="margin-top:10px">
+      A 40&nbsp;°C la <b>humedad dispara la sensación térmica</b> y, sobre todo, <b>daña la colección</b>: con HR alta
+      aparecen moho, corrosión y cristalización de sales en piedra y estuco Puuc. El objetivo no es enfriar la sala, sino
+      <b>estabilizar la humedad</b> — meta de conservación <b>≈ 50 % HR</b> (evitar &gt; 60 %). Para eso sirven los
+      <b>deshumidificadores</b> (bajan y sostienen la HR) y los <b>dataloggers</b> (miden T°/HR para comprobar que el control funciona).
+    </div>
+  </div>
+
+  <!-- EQUIPO -->
+  <div class="card">
+    <h2>🧰 Equipo disponible (marcas reales de tus fotos)</h2>
+    <div class="equip">
+      <div class="eq">
+        <div class="row"><span class="ico">💨</span><div><b>Deshumidificador · Hisense DH50K1R</b><div class="small muted">Deshumidificador de ambiente</div></div></div>
+        <table>
+          <tr><td>Capacidad</td><td><b>23.7 L/día</b></td></tr>
+          <tr><td>Potencia</td><td>460 W · 4.2 A</td></tr>
+          <tr><td>Alimentación</td><td>115 V~ · 60 Hz</td></tr>
+          <tr><td>Refrigerante</td><td>R32 · 0.10 kg (inflamable)</td></tr>
+          <tr><td>Cobertura de diseño*</td><td><b id="covLbl">60 m²</b> por equipo</td></tr>
+        </table>
+        <div class="small muted" style="margin-top:5px">*Regla práctica en clima cálido-húmedo para sostener ≈50 % HR. Ajustable — verifica con la ficha del fabricante.</div>
+      </div>
+      <div class="eq">
+        <div class="row"><span class="ico">🌡️</span><div><b>Datalogger · HTC-2</b><div class="small muted">Reloj / termohigrómetro T°/HR</div></div></div>
+        <table>
+          <tr><td>Mide</td><td>Temperatura y humedad relativa</td></tr>
+          <tr><td>Sondas</td><td>Interior (IN) + exterior (OUT)</td></tr>
+          <tr><td>Colocación</td><td>a ~1.5 m de altura</td></tr>
+          <tr><td>Zona representada</td><td>~<b id="dlLbl">3.0 m</b> de radio (microclima)</td></tr>
+          <tr><td>Regla</td><td>lejos de puertas, ventanas y del propio deshumidificador</td></tr>
+        </table>
+        <div class="small muted" style="margin-top:5px">Un datalogger mide el punto donde está: colócalo donde <b>representa</b> a la colección, no junto a una entrada de aire.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OVERVIEW -->
+  <div class="card" id="ovCard">
+    <h2>🗺️ Plano del museo — elige una sala</h2>
+    <p class="small muted">Distribución a escala aproximada del plano oficial (5 salas alrededor del Patio Central con la Casa Maya).
+       Ve <b>terminando las salas una por una</b>: haz clic en una para colocar sus deshumidificadores y dataloggers.</p>
+    <div class="ovwrap"><div class="ov" id="ov"></div></div>
+    <div class="progressbar" style="margin-top:10px"><i id="progFill" style="width:0%"></i></div>
+  </div>
+
+  <!-- WORKSPACE -->
+  <div class="card hide" id="wsCard">
+    <div class="row">
+      <button class="btn ghost" onclick="closeSala()">◀ Volver al plano</button>
+      <div class="spacer"></div>
+      <span class="tag" id="salaTag">—</span>
+    </div>
+    <h2 id="salaTit" style="margin-bottom:2px">—</h2>
+    <div class="small muted" id="salaDims">—</div>
+
+    <div class="scalebar" id="scaleBar"></div>
+    <div class="svwrap"><div class="sala" id="sala"></div></div>
+    <div class="legend">
+      <span><span class="dot" style="background:#2ea58f"></span> Cobertura del deshumidificador</span>
+      <span><span class="dot" style="background:#1f6fb0"></span> Zona que representa el datalogger</span>
+      <span>🔓 abierta · 🔒 cerrada</span>
+      <span><kbd>doble clic</kbd> en un equipo lo retira</span>
+    </div>
+
+    <div class="tray" id="tray"></div>
+
+    <div class="stat" id="statBox"></div>
+    <div id="fbBox"></div>
+
+    <div class="row" style="margin-top:12px">
+      <button class="btn ghost" onclick="resetSala()">↻ Reiniciar sala</button>
+      <div class="spacer"></div>
+      <button class="btn" onclick="evaluarSala()">✅ Evaluar colocación</button>
+    </div>
+  </div>
+
+  <div class="card small muted">
+    <b>Nota sobre la escala.</b> El plano oficial trae <b>cotas en metros</b> y área total <b>978.3 m²</b>, pero la casilla de
+    escala no viene rotulada, así que las medidas por sala de abajo son <b>aproximadas</b> (derivadas de las proporciones del plano).
+    Ajústalas con las cotas reales cuando las tengas — todas están en un solo lugar del código (<code>SALAS</code>) y el juego se
+    redibuja a escala automáticamente.
+    <div style="margin-top:6px">Versión de trabajo local · no sustituye al juego RE-ORG existente.</div>
+  </div>
+
+</div>
+
+<script>
+/* ============================================================
+   DATOS — todo lo editable está aquí arriba
+   Medidas interiores APROXIMADAS en metros (confirmar con el plano oficial).
+   ============================================================ */
+const DEHUM_COVER_M2 = 60;    // cobertura de diseño por deshumidificador (m²)
+const DL_RADIUS_M    = 3.0;   // radio (m) del microclima que "representa" un datalogger
+const DL_MIN_CLEAR_M = 1.5;   // distancia mínima de un datalogger a puertas/ventanas (m)
+const DEHUM_COVER_R  = Math.sqrt(DEHUM_COVER_M2/Math.PI); // radio equivalente de cobertura (m)
+
+// openings: posición en metros dentro de la sala (x desde izq, y desde arriba), sobre un muro.
+// tipo: 'door' | 'window'
+const SALAS = [
+  { id:'norte', nombre:'Sala Norte', w:12.5, h:12.5,
+    desc:'Sala cuadrada al norte del patio, con núcleos de servicio (SITE) en dos esquinas y exhibición central.',
+    exhibit:{x:2.6,y:2.6,w:7.3,h:7.3},
+    openings:[
+      {t:'door', x:3.5, y:12.5}, {t:'door', x:9.0, y:12.5},   // al corredor del patio (muro sur)
+      {t:'window', x:0, y:4.0}, {t:'window', x:0, y:8.5},      // muro poniente
+      {t:'window', x:12.5, y:6.2}                              // muro oriente
+    ]},
+  { id:'sur', nombre:'Sala Sur', w:11.5, h:8.0,
+    desc:'Sala rectangular al sur del patio, junto a la cafetería. Exhibición central y vitrinas perimetrales.',
+    exhibit:{x:2.4,y:1.8,w:6.7,h:4.4},
+    openings:[
+      {t:'door', x:3.2, y:0}, {t:'door', x:8.3, y:0},          // al corredor del patio (muro norte)
+      {t:'door', x:5.8, y:8.0},                                // acceso hacia cafetería (muro sur)
+      {t:'window', x:0, y:4.0}, {t:'window', x:11.5, y:4.0}
+    ]},
+  { id:'oriente', nombre:'Sala Oriente', w:6.0, h:29.5,
+    desc:'Galería larga de una sola nave al oriente. Vitrinas y bancos a lo largo del eje central.',
+    exhibit:{x:1.3,y:2.5,w:3.4,h:24.5},
+    openings:[
+      {t:'door', x:0, y:5.0}, {t:'door', x:0, y:13.0}, {t:'door', x:0, y:22.0}, // al corredor del patio (muro poniente)
+      {t:'window', x:6.0, y:8.0}, {t:'window', x:6.0, y:16.0}, {t:'window', x:6.0, y:24.0} // muro oriente
+    ]},
+  { id:'poniente', nombre:'Sala Poniente', w:6.0, h:25.0,
+    desc:'Galería larga al poniente, hacia el patio. Comparte muro con la Sala Temporal.',
+    exhibit:{x:1.3,y:2.4,w:3.4,h:20.2},
+    openings:[
+      {t:'door', x:6.0, y:5.0}, {t:'door', x:6.0, y:12.5}, {t:'door', x:6.0, y:20.0}, // al patio (muro oriente)
+      {t:'door', x:3.0, y:0},                                 // acceso principal (muro norte)
+      {t:'window', x:0, y:9.0}, {t:'window', x:0, y:17.0}
+    ]},
+  { id:'temporal', nombre:'Sala Temporal', w:6.0, h:25.0,
+    desc:'Galería interior del ala poniente para exposiciones temporales. Da al acceso y a la plaza arbolada.',
+    exhibit:{x:1.3,y:2.4,w:3.4,h:20.2},
+    openings:[
+      {t:'door', x:3.0, y:0},                                 // acceso (muro norte)
+      {t:'door', x:6.0, y:8.0}, {t:'door', x:6.0, y:17.0},    // paso a Sala Poniente (muro oriente)
+      {t:'window', x:0, y:6.0}, {t:'window', x:0, y:13.0}, {t:'window', x:0, y:20.0} // a la plaza (muro poniente)
+    ]}
+];
+
+const requiredDehum = s => Math.max(1, Math.ceil((s.w*s.h)/DEHUM_COVER_M2));
+const requiredDL    = s => Math.max(1, Math.ceil((s.w*s.h)/150)); // ~1 por cada 150 m² (zona representativa)
+
+/* ============================================================
+   CLIMA — índice de calor (fórmula NWS Rothfusz)
+   ============================================================ */
+function heatIndexC(tc, rh){
+  const T=tc*9/5+32, R=rh;
+  let HI=0.5*(T+61+((T-68)*1.2)+(R*0.094));
+  if((T+HI)/2>=80){
+    HI=-42.379+2.04901523*T+10.14333127*R-0.22475541*T*R-0.00683783*T*T
+       -0.05481717*R*R+0.00122874*T*T*R+0.00085282*T*R*R-0.00000199*T*T*R*R;
+    if(R<13 && T>=80 && T<=112) HI-=((13-R)/4)*Math.sqrt((17-Math.abs(T-95))/17);
+    else if(R>85 && T>=80 && T<=87) HI+=((R-85)/10)*((87-T)/5);
+  }
+  return (HI-32)*5/9;
+}
+const rh=document.getElementById('rh');
+function updClima(){
+  const v=+rh.value; const hi=heatIndexC(40,v);
+  document.getElementById('rhVal').textContent=v;
+  document.getElementById('rhVal2').textContent=v;
+  document.getElementById('hiVal').textContent=Math.round(hi)+' °C';
+  let who='Peligro extremo para las personas', cls='bad';
+  if(hi<32){who='Precaución';cls='ok'} else if(hi<41){who='Precaución';cls='ok'}
+  else if(hi<54){who='Peligro — golpe de calor probable';cls='warn'} else {who='Peligro extremo';cls='bad'}
+  const el=document.getElementById('hiWho'); el.textContent=who;
+  el.className='small '+ (cls==='ok'?'muted':'') ;
+}
+rh.addEventListener('input',updClima); updClima();
+document.getElementById('covLbl').textContent=DEHUM_COVER_M2+' m²';
+document.getElementById('dlLbl').textContent=DL_RADIUS_M.toFixed(1)+' m';
+
+/* ============================================================
+   ESTADO
+   ============================================================ */
+let done = {}; try{ done=JSON.parse(localStorage.getItem('puuc_s4_done')||'{}'); }catch(e){ done={}; }
+function saveDone(){ try{ localStorage.setItem('puuc_s4_done',JSON.stringify(done)); }catch(e){} }
+function updProgress(){
+  const n=SALAS.filter(s=>done[s.id]).length;
+  document.getElementById('progTag').textContent=n+' / '+SALAS.length+' salas';
+  document.getElementById('progFill').style.width=(100*n/SALAS.length)+'%';
+}
+
+/* ============================================================
+   OVERVIEW — plano esquemático a escala
+   ============================================================ */
+const OV_POS = { // posiciones en el plano esquemático (px dentro de .ov 760x600)
+  temporal:{x:70, y:70, w:78, h:470},
+  poniente:{x:152,y:70, w:78, h:470},
+  norte:   {x:300,y:24, w:180,h:170},
+  patio:   {x:300,y:204,w:180,h:210},
+  sur:     {x:305,y:424,w:170,h:120},
+  oriente: {x:560,y:70, w:96, h:470}
+};
+function buildOverview(){
+  const ov=document.getElementById('ov'); ov.innerHTML='';
+  // patio
+  const p=document.createElement('div'); p.className='opatio';
+  Object.assign(p.style,{left:OV_POS.patio.x+'px',top:OV_POS.patio.y+'px',width:OV_POS.patio.w+'px',height:OV_POS.patio.h+'px'});
+  p.innerHTML='<div style="text-align:center"><div class="ocasa">CASA MAYA</div><div class="small" style="color:#8a7a55;margin-top:6px">PATIO CENTRAL</div></div>';
+  ov.appendChild(p);
+  // servicios (decorativos)
+  const serv=[
+    {x:70,y:20,w:150,h:40,t:'Taller · Cuarto eléctrico'},
+    {x:600,y:20,w:150,h:70,t:'Cuarto de bombas · Cisterna'},
+    {x:70,y:552,w:150,h:38,t:'Cafetería · Sanitarios'}
+  ];
+  serv.forEach(s=>{const d=document.createElement('div');d.className='oserv';
+    Object.assign(d.style,{left:s.x+'px',top:s.y+'px',width:s.w+'px',height:s.h+'px'});d.textContent=s.t;ov.appendChild(d);});
+  // salas
+  SALAS.forEach(s=>{
+    const P=OV_POS[s.id]; const d=document.createElement('div');
+    d.className='oroom'+(done[s.id]?' done':''); d.dataset.id=s.id;
+    Object.assign(d.style,{left:P.x+'px',top:P.y+'px',width:P.w+'px',height:P.h+'px'});
+    d.innerHTML=`<div>${s.nombre.replace('Sala ','')}</div><div class="a">${s.w}×${s.h} m · ${Math.round(s.w*s.h)} m²</div>`;
+    d.title=s.nombre;
+    d.onclick=()=>openSala(s.id);
+    ov.appendChild(d);
+  });
+}
+
+/* ============================================================
+   WORKSPACE — sala a escala, drag & drop
+   ============================================================ */
+let cur=null, PXM=1, units=[], openings=[], sdrag=null, offx=0, offy=0, salaEl=null;
+const MAXW=640, MAXH=520, PAD=0;
+
+function openSala(id){
+  cur=SALAS.find(s=>s.id===id); units=[]; openings=[];
+  document.getElementById('ovCard').classList.add('hide');
+  document.getElementById('wsCard').classList.remove('hide');
+  document.getElementById('salaTit').textContent=cur.nombre;
+  document.getElementById('salaTag').textContent=cur.nombre;
+  document.getElementById('salaDims').textContent=
+    `${cur.w} × ${cur.h} m · ${Math.round(cur.w*cur.h)} m² (aprox.) — ${cur.desc}`;
+  PXM = Math.min(MAXW/cur.w, MAXH/cur.h);
+  renderSala();
+  buildTray();
+  drawScaleBar();
+  renderStats(); document.getElementById('fbBox').innerHTML='';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function closeSala(){
+  document.getElementById('wsCard').classList.add('hide');
+  document.getElementById('ovCard').classList.remove('hide');
+  buildOverview(); updProgress();
+}
+function resetSala(){ openSala(cur.id); }
+
+function renderSala(){
+  salaEl=document.getElementById('sala');
+  const W=cur.w*PXM, H=cur.h*PXM;
+  salaEl.style.width=W+'px'; salaEl.style.height=H+'px'; salaEl.innerHTML='';
+  // exhibición central
+  if(cur.exhibit){const e=document.createElement('div');e.className='exhibit';
+    Object.assign(e.style,{left:cur.exhibit.x*PXM+'px',top:cur.exhibit.y*PXM+'px',
+      width:cur.exhibit.w*PXM+'px',height:cur.exhibit.h*PXM+'px'});
+    e.textContent='exhibición'; salaEl.appendChild(e);}
+  // aperturas
+  cur.openings.forEach((o,i)=>{
+    const op={...o,closed:false,i};
+    const el=document.createElement('div'); el.className='opening open';
+    el.style.left=clampWall(o.x,cur.w)*PXM+'px'; el.style.top=clampWall(o.y,cur.h)*PXM+'px';
+    el.textContent='🔓'; el.title=(o.t==='window'?'Ventana':'Puerta')+' — clic para cerrar';
+    el.onclick=()=>{op.closed=!op.closed; el.className='opening '+(op.closed?'closed':'open');
+      el.textContent=op.closed?'🔒':'🔓'; renderStats();};
+    op.el=el; salaEl.appendChild(el); openings.push(op);
+  });
+  // drag dentro de la sala
+  salaEl.onpointerdown=onDown;
+}
+function clampWall(v,max){ return Math.max(0,Math.min(v,max)); }
+
+function drawScaleBar(){
+  const m=5, px=m*PXM;
+  document.getElementById('scaleBar').innerHTML=
+    `<span>Escala:</span><div class="bar" style="width:${px}px"></div><span>${m} m &nbsp;·&nbsp; 1 m = ${PXM.toFixed(1)} px</span>`;
+}
+
+function buildTray(){
+  const reqD=requiredDehum(cur), reqL=requiredDL(cur);
+  const t=document.getElementById('tray');
+  t.innerHTML=`<div class="small muted" style="margin-bottom:4px">Arrastra a la sala. Meta sugerida:
+     <b>${reqD}</b> deshumidificador(es) 💨 y <b>${reqL}</b> datalogger(s) 🌡️ para ${Math.round(cur.w*cur.h)} m².</div>`;
+  const mk=(kind,label)=>{const c=document.createElement('span');c.className='chip';
+    c.innerHTML=(kind==='dehum'?'💨':'🌡️')+' '+label; c.dataset.kind=kind;
+    c.onpointerdown=e=>spawnDrag(e,kind); t.appendChild(c);};
+  mk('dehum','Deshumidificador'); mk('dl','Datalogger');
+  const hint=document.createElement('div'); hint.className='small muted'; hint.style.marginTop='6px';
+  hint.textContent='Puedes colocar los que necesites; el evaluador te dice si sobran o faltan.';
+  t.appendChild(hint);
+}
+
+function addUnit(kind,x,y){
+  const u={kind,x,y}; const el=document.createElement('div');
+  el.className='unit '+kind; el.textContent=kind==='dehum'?'💨':'🌡️';
+  el.title=kind==='dehum'?'Deshumidificador — arrastra':'Datalogger — arrastra';
+  let cover=null;
+  if(kind==='dehum'){cover=document.createElement('div');cover.className='cover';salaEl.appendChild(cover);}
+  else{cover=document.createElement('div');cover.className='dlz';salaEl.appendChild(cover);}
+  u.el=el; u.cover=cover;
+  el.onpointerdown=e=>{e.stopPropagation();startDragUnit(e,u);};
+  el.ondblclick=e=>{e.stopPropagation();removeUnit(u);};
+  salaEl.appendChild(el); units.push(u); placeUnit(u); renderStats();
+  return u;
+}
+function removeUnit(u){ u.el.remove(); if(u.cover)u.cover.remove(); units=units.filter(x=>x!==u); renderStats(); }
+function placeUnit(u){
+  u.el.style.left=u.x*PXM+'px'; u.el.style.top=u.y*PXM+'px';
+  if(u.cover){
+    const r=(u.kind==='dehum'?DEHUM_COVER_R:DL_RADIUS_M)*PXM;
+    u.cover.style.left=u.x*PXM+'px'; u.cover.style.top=u.y*PXM+'px';
+    u.cover.style.width=2*r+'px'; u.cover.style.height=2*r+'px';
+  }
+}
+
+// arrastrar desde la bandeja (crea al soltar dentro de la sala)
+let ghost=null,ghostKind=null;
+function spawnDrag(e,kind){
+  ghostKind=kind; const move=ev=>{
+    const r=salaEl.getBoundingClientRect();
+    if(ev.clientX>=r.left&&ev.clientX<=r.right&&ev.clientY>=r.top&&ev.clientY<=r.bottom){
+      if(!ghost){ghost=addUnit(kind,(ev.clientX-r.left)/PXM,(ev.clientY-r.top)/PXM);}
+      else{ghost.x=(ev.clientX-r.left)/PXM;ghost.y=(ev.clientY-r.top)/PXM;clampUnit(ghost);placeUnit(ghost);renderStats();}
+    }
+  };
+  const up=()=>{document.removeEventListener('pointermove',move);document.removeEventListener('pointerup',up);ghost=null;};
+  document.addEventListener('pointermove',move);document.addEventListener('pointerup',up);
+}
+// arrastrar unidad existente
+function startDragUnit(e,u){
+  sdrag=u; u.el.classList.add('dragging'); u.el.setPointerCapture(e.pointerId);
+  const move=ev=>{const r=salaEl.getBoundingClientRect();
+    u.x=(ev.clientX-r.left)/PXM; u.y=(ev.clientY-r.top)/PXM; clampUnit(u); placeUnit(u); renderStats();};
+  const up=()=>{u.el.classList.remove('dragging');document.removeEventListener('pointermove',move);document.removeEventListener('pointerup',up);sdrag=null;};
+  document.addEventListener('pointermove',move);document.addEventListener('pointerup',up);
+}
+function onDown(e){/* clic vacío: nada */}
+function clampUnit(u){ u.x=Math.max(0,Math.min(u.x,cur.w)); u.y=Math.max(0,Math.min(u.y,cur.h)); }
+
+/* ============================================================
+   MÉTRICAS Y EVALUACIÓN
+   ============================================================ */
+function dist(ax,ay,bx,by){return Math.hypot(ax-bx,ay-by);}
+function coveragePct(){
+  // muestreo en malla de 0.4 m dentro de la sala
+  const step=0.4; let inside=0,covered=0;
+  const dh=units.filter(u=>u.kind==='dehum');
+  for(let x=step/2;x<cur.w;x+=step)for(let y=step/2;y<cur.h;y+=step){
+    inside++;
+    for(const d of dh){ if(dist(x,y,d.x,d.y)<=DEHUM_COVER_R){covered++;break;} }
+  }
+  return inside? covered/inside : 0;
+}
+function nearestOpening(u){
+  let best=1e9; openings.forEach(o=>{best=Math.min(best,dist(u.x,u.y,clampWall(o.x,cur.w),clampWall(o.y,cur.h)));}); return best;
+}
+function renderStats(){
+  const dh=units.filter(u=>u.kind==='dehum'), dl=units.filter(u=>u.kind==='dl');
+  const cov=coveragePct(), closed=openings.filter(o=>o.closed).length;
+  const box=document.getElementById('statBox');
+  box.innerHTML=`
+    <div class="s"><span class="small muted">Deshumidificadores</span><b>${dh.length} / ${requiredDehum(cur)}</b><span class="small muted">necesarios</span></div>
+    <div class="s"><span class="small muted">Dataloggers</span><b>${dl.length} / ${requiredDL(cur)}</b><span class="small muted">recomendados</span></div>
+    <div class="s"><span class="small muted">Área cubierta</span><b>${Math.round(cov*100)}%</b><span class="small muted">por deshumidificadores</span></div>
+    <div class="s"><span class="small muted">Aperturas cerradas</span><b>${closed} / ${openings.length}</b><span class="small muted">🔒 controla la HR</span></div>`;
+}
+function evaluarSala(){
+  const dh=units.filter(u=>u.kind==='dehum'), dl=units.filter(u=>u.kind==='dl');
+  const cov=coveragePct(), reqD=requiredDehum(cur), reqL=requiredDL(cur);
+  const closed=openings.filter(o=>o.closed).length, total=openings.length;
+  const good=[], bad=[];
+
+  if(dh.length>=reqD) good.push(`Suficientes deshumidificadores (${dh.length} para ${Math.round(cur.w*cur.h)} m²).`);
+  else bad.push(`Faltan deshumidificadores: pusiste ${dh.length} y para ${Math.round(cur.w*cur.h)} m² se necesitan ${reqD} (uno cada ${DEHUM_COVER_M2} m²).`);
+
+  if(cov>=0.85) good.push(`La cobertura llega al ${Math.round(cov*100)}% del área — casi sin zonas muertas.`);
+  else bad.push(`Cobertura baja (${Math.round(cov*100)}%). Reparte los deshumidificadores para que sus círculos cubran toda la sala, sin encimarlos.`);
+
+  if(dl.length>=reqL) good.push(`Dataloggers suficientes (${dl.length}).`);
+  else bad.push(`Coloca al menos ${reqL} datalogger(s) para representar el microclima de esta sala.`);
+
+  // dataloggers lejos de aperturas
+  const dlBad = dl.filter(u=>nearestOpening(u)<DL_MIN_CLEAR_M);
+  if(dl.length){
+    if(dlBad.length===0) good.push(`Los dataloggers están a más de ${DL_MIN_CLEAR_M} m de puertas y ventanas.`);
+    else bad.push(`${dlBad.length} datalogger(s) están demasiado cerca de una puerta/ventana (< ${DL_MIN_CLEAR_M} m): medirían el aire de afuera, no el de la colección.`);
+  }
+  // datalogger no encima del deshumidificador
+  const dlOnDehum = dl.filter(u=>dh.some(d=>dist(u.x,u.y,d.x,d.y)<1.0));
+  if(dlOnDehum.length) bad.push(`Aleja los dataloggers del propio deshumidificador (mínimo ~1 m): junto a él la lectura no representa la sala.`);
+
+  if(total){
+    if(closed===total) good.push(`Todas las puertas y ventanas cerradas 🔒 — el control de humedad puede funcionar.`);
+    else bad.push(`Quedan ${total-closed} apertura(s) abiertas 🔓: entra la humedad de afuera (40 °C) y los deshumidificadores no sostienen la HR.`);
+  }
+
+  const ok = bad.length===0;
+  const fb=document.getElementById('fbBox');
+  fb.className='fb '+(ok?'ok':'no');
+  fb.innerHTML=`<b>${ok?'✅ ¡Sala lista!':'⚠️ Aún se puede mejorar'}</b>`+
+    (good.length?`<ul>${good.map(g=>`<li>✔️ ${g}</li>`).join('')}</ul>`:'')+
+    (bad.length?`<div style="margin-top:6px"><b>Ajusta:</b><ul>${bad.map(b=>`<li>• ${b}</li>`).join('')}</ul></div>`:'');
+  if(ok){ done[cur.id]=true; saveDone(); updProgress();
+    fb.innerHTML+=`<div style="margin-top:8px">Guardada como completa. <button class="btn" onclick="closeSala()">◀ Volver y elegir otra sala</button></div>`;
+  }
+}
+
+/* init */
+buildOverview(); updProgress();
+</script>
+</body>
+</html>
