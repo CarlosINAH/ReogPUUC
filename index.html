@@ -149,6 +149,23 @@ kbd{background:var(--ghost);border:1px solid var(--border);border-radius:5px;pad
 .hide{display:none}
 .progressbar{height:10px;background:var(--track);border-radius:999px;overflow:hidden;margin-top:12px}
 .progressbar>i{display:block;height:100%;background:var(--accent2);transition:width .3s}
+
+/* INFORME imprimible (hoja blanca, legible en cualquier tema y al imprimir) */
+#reportCard{background:#ffffff;color:#182430;border:1px solid #d0d5db}
+#reportCard h2,#reportCard h3{color:#182430}
+.report table{width:100%;border-collapse:collapse;font-size:13px;margin-top:10px}
+.report th,.report td{border:1px solid #cfd6de;padding:6px 9px;text-align:left}
+.report th{background:#eef1f5}
+.report tr.tot td{background:#f4f7fa;font-weight:700}
+.report .rmeta{font-size:12.5px;color:#4a5666;margin:2px 0}
+.report .ok{color:#1f8a4c;font-weight:700}.report .pend{color:#a06400}
+@media print{
+  @page{margin:14mm}
+  body{background:#fff}
+  .hd,#ovCard,#wsCard,.wrap>.card:not(#reportCard){display:none!important}
+  #reportCard{display:block!important;border:0;box-shadow:none;margin:0}
+  .report .noprint{display:none!important}
+}
 </style>
 </head>
 <body>
@@ -235,6 +252,20 @@ kbd{background:var(--ghost);border:1px solid var(--border);border-radius:5px;pad
     <div class="ovwrap"><div class="museo" id="ov"></div></div>
     <div class="progressbar"><i id="progFill" style="width:0%"></i></div>
     <div class="museo-sum" id="museoSum"></div>
+    <div class="row" style="margin-top:10px">
+      <button class="btn ghost" onclick="openReport()">📄 Ver informe del museo</button>
+      <button class="btn ghost" onclick="printReport()">🖨️ Imprimir / Guardar PDF</button>
+    </div>
+  </div>
+
+  <!-- INFORME -->
+  <div class="card report hide" id="reportCard">
+    <div class="row noprint" style="margin-bottom:6px">
+      <button class="btn ghost" onclick="closeReport()">✖ Cerrar</button>
+      <div class="spacer"></div>
+      <button class="btn" onclick="printReport()">🖨️ Imprimir / Guardar PDF</button>
+    </div>
+    <div id="reportBody"></div>
   </div>
 
   <!-- WORKSPACE -->
@@ -638,6 +669,41 @@ function paintIcons(){
   document.getElementById('covD').textContent=EQ.dehum.cover+' m²';
   document.getElementById('covA').textContent=EQ.ac.cover+' m²';
 }
+/* ============================================================
+   INFORME imprimible del museo
+   ============================================================ */
+function buildReport(){
+  let td=0,ta=0,tl=0,area=0;
+  const rows=SALAS.map(s=>{
+    const c=placedCounts(s.id), rd=requiredN('dehum',s), ra=requiredN('ac',s), rl=requiredN('dl',s);
+    td+=c.dehum; ta+=c.ac; tl+=c.dl; area+=s.w*s.h;
+    const cell=(n,r)=>`<td>${n} / ${r}${n>=r?' <span class="ok">✓</span>':''}</td>`;
+    return `<tr><td><b>${s.nombre}</b></td><td>${s.w}×${s.h} m</td><td>${Math.round(s.w*s.h)} m²</td>`+
+      cell(c.dehum,rd)+cell(c.ac,ra)+cell(c.dl,rl)+
+      `<td class="${done[s.id]?'ok':'pend'}">${done[s.id]?'✔ Lista':'Pendiente'}</td></tr>`;
+  }).join('');
+  const dn=SALAS.filter(s=>done[s.id]).length;
+  const fecha=new Date().toLocaleDateString('es-MX',{day:'2-digit',month:'long',year:'numeric'});
+  const hi=Math.round(heatIndexC(climaT,climaRH));
+  document.getElementById('reportBody').innerHTML=`
+    <h2 style="margin:0 0 2px">Informe de colocación — Sección 4 (Deshumidificadores, A/C y dataloggers)</h2>
+    <div class="rmeta">Museo Arqueológico del Puuc · Zona Arqueológica de Kabah, Santa Elena, Yucatán · ${fecha}</div>
+    <div class="rmeta">Clima de referencia: <b>${Math.round(climaT)} °C</b> · <b>${Math.round(climaRH)} % HR</b> · sensación térmica ${hi} °C</div>
+    <div class="rmeta">Metas de conservación en sala: <b>≈ 22 °C</b> (aires acondicionados) · <b>≈ 50 % HR</b> (deshumidificadores)</div>
+    <table>
+      <thead><tr><th>Sala</th><th>Medida</th><th>Área</th><th>Deshum. (col./meta)</th><th>A/C 22 °C (col./meta)</th><th>Dataloggers (col./meta)</th><th>Estado</th></tr></thead>
+      <tbody>${rows}
+        <tr class="tot"><td>TOTAL</td><td>—</td><td>${Math.round(area)} m²</td><td>${td}</td><td>${ta}</td><td>${tl}</td><td>${dn}/${SALAS.length} listas</td></tr>
+      </tbody>
+    </table>
+    <div class="rmeta" style="margin-top:10px"><b>Equipo:</b> Deshumidificador Hisense DH50K1R (23.7 L/día · cobertura ~${EQ.dehum.cover} m²) · Aire acondicionado a 22 °C (~${EQ.ac.cover} m²) · Datalogger HTC-2 (T°/HR, ~1.5 m de altura, lejos de puertas/ventanas y equipos).</div>
+    <div class="rmeta">Regla de conteo: 1 deshumidificador por cada ${EQ.dehum.need} m², 1 A/C por cada ${EQ.ac.need} m². Cerrar puertas y ventanas para sostener el control ambiental.</div>
+    <div class="rmeta" style="margin-top:8px;color:#7a8695">Generado con la herramienta RE-ORG · las medidas de sala provienen del plano oficial (área total 978.3 m²).</div>`;
+}
+function openReport(){ buildReport(); document.getElementById('reportCard').classList.remove('hide'); document.getElementById('reportCard').scrollIntoView({behavior:'smooth'}); }
+function closeReport(){ document.getElementById('reportCard').classList.add('hide'); }
+function printReport(){ buildReport(); window.print(); }
+
 /* Tema claro/oscuro — por defecto oscuro, se guarda en el navegador */
 function applyTheme(t){
   document.documentElement.setAttribute('data-theme',t);
