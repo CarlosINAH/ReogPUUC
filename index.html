@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sección 4 · Museo del Puuc — Deshumidificadores, A/C y dataloggers</title>
+<title>Monitoreo y control de HR · Museo del Puuc</title>
 <style>
 :root{
   --bg:#eef1f4; --panel:#ffffff; --ink:#1e2732; --sub:#5a6675; --border:#d3dae2;
@@ -87,7 +87,8 @@ h2{font-size:17px;margin:.6em 0 .2em}
 
 /* MINIATURA / MAPA */
 .maphint{font-size:12.5px;color:var(--sub);margin:2px 0 8px}
-.ovwrap{overflow:auto;display:flex;justify-content:center}
+.ovwrap{overflow:hidden;display:flex;justify-content:center}
+#ov{transform-origin:50% 0}
 .museo{position:relative;background:var(--map-bg);border:2px solid var(--wall);border-radius:8px;flex:none}
 .oroom{position:absolute;border:2px solid var(--wall);background:var(--room);border-radius:3px;cursor:pointer;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;font-weight:700;color:var(--room-ink);transition:transform .12s,background .15s,box-shadow .15s;overflow:hidden}
 .oroom:hover{background:var(--roomsel);transform:scale(1.03);box-shadow:0 4px 12px rgba(0,0,0,.14);z-index:5}
@@ -170,6 +171,21 @@ kbd{background:var(--ghost);border:1px solid var(--border);border-radius:5px;pad
   #reportCard{display:block!important;border:0;box-shadow:none;margin:0}
   .report .noprint{display:none!important}
 }
+
+/* MÓVIL — que todo entre y se toque bien en pantallas chicas */
+@media(max-width:560px){
+  .wrap{padding:10px}
+  .card{padding:12px;border-radius:12px;margin:10px 0}
+  h1{font-size:17px;line-height:1.25}
+  h2{font-size:15.5px}
+  .metric b{font-size:22px} .bignum{font-size:22px}
+  .btn{padding:10px 14px} .btn.ghost{padding:9px 12px}
+  .chip{padding:8px 13px;font-size:13.5px}
+  .wshead{gap:8px}
+  .legend{gap:9px 12px}
+  .museo-sum{gap:10px 14px}
+  summary{font-size:15.5px!important}
+}
 </style>
 </head>
 <body>
@@ -177,8 +193,8 @@ kbd{background:var(--ghost);border:1px solid var(--border);border-radius:5px;pad
 
   <div class="hd">
     <div class="logo">卅</div>
-    <div>
-      <h1>Sección 4 · Deshumidificadores, A/C y dataloggers</h1>
+    <div style="flex:1;min-width:200px">
+      <h1>Recomendaciones de monitoreo y control de humedad relativa en el Museo del Puuc</h1>
       <div class="muted small">Museo Arqueológico del Puuc · Zona Arqueológica de Kabah · Método RE-ORG (INAH)</div>
     </div>
     <div class="spacer"></div>
@@ -547,13 +563,23 @@ function buildMuseoMap(el, k, currentId, onSala){
     el.appendChild(d);
   });
 }
-function buildOverview(){ buildMuseoMap(document.getElementById('ov'),1,null,openSala); updMuseoSum(); }
+function buildOverview(){ buildMuseoMap(document.getElementById('ov'),1,null,openSala); updMuseoSum(); fitMuseo(); }
+function fitMuseo(){
+  const ov=document.getElementById('ov'); if(!ov) return; const wrap=ov.parentElement;
+  const avail=wrap.clientWidth||BASE.w; const s=Math.min(1, avail/BASE.w);
+  ov.style.transform='scale('+s+')'; wrap.style.height=Math.ceil(BASE.h*s)+'px';
+}
 
 /* ============================================================
    WORKSPACE — sala a escala, drag & drop
    ============================================================ */
 let cur=null, PXM=1, units=[], openings=[], salaEl=null, acSvg=null;
-const MAXW=620, MAXH=500;
+let MAXW=620; const MAXH=500;
+function calcMaxW(){
+  const sv=document.querySelector('#wsCard .svwrap');
+  const avail=(sv?sv.clientWidth:640)-18;                 // descuenta padding del contenedor
+  MAXW=Math.min(620, Math.max(240, avail));
+}
 function openSala(id){
   if(cur) snapshotSala();
   cur=SALAS.find(s=>s.id===id); units=[]; openings=[];
@@ -563,6 +589,7 @@ function openSala(id){
   document.getElementById('salaTit').textContent=cur.nombre;
   document.getElementById('salaTag').textContent=Math.round(cur.w*cur.h)+' m²';
   document.getElementById('salaDims').textContent=`${cur.w} × ${cur.h} m — ${cur.desc}`;
+  calcMaxW();                                    // ajusta al ancho del dispositivo
   PXM=Math.min(MAXW/cur.w, MAXH/cur.h);
   const saved=placed[cur.id];
   renderSala(saved&&saved.closed);
@@ -757,7 +784,7 @@ function buildReport(){
   const fecha=new Date().toLocaleDateString('es-MX',{day:'2-digit',month:'long',year:'numeric'});
   const hi=Math.round(heatIndexC(climaT,climaRH));
   document.getElementById('reportBody').innerHTML=`
-    <h2 style="margin:0 0 2px">Informe de colocación — Sección 4 (Deshumidificadores, A/C y dataloggers)</h2>
+    <h2 style="margin:0 0 2px">Monitoreo y control de humedad relativa — colocación de equipo</h2>
     <div class="rmeta">Museo Arqueológico del Puuc · Zona Arqueológica de Kabah, Santa Elena, Yucatán · ${fecha}</div>
     <div class="rmeta">Clima de referencia: <b>${Math.round(climaT)} °C</b> · <b>${Math.round(climaRH)} % HR</b> · sensación térmica ${hi} °C</div>
     <div class="rmeta">Metas de conservación en sala (según materiales — mayoría lítica, con concha y metales): <b>≈ ${AC_SETPOINT} °C</b> (aires acondicionados) · <b>≈ ${HR_TARGET} % HR</b> (deshumidificadores)</div>
@@ -787,6 +814,12 @@ applyTheme(theme);
 
 paintIcons(); buildOverview(); updProgress(); updClima(); fetchWeather();
 setInterval(fetchWeather, 600000); // se actualiza solo cada 10 min
+
+// Reajuste al girar/redimensionar el teléfono
+let _rz; window.addEventListener('resize',()=>{ clearTimeout(_rz); _rz=setTimeout(()=>{
+  const wsOpen = cur && !document.getElementById('wsCard').classList.contains('hide');
+  if(wsOpen) openSala(cur.id); else fitMuseo();
+}, 160); });
 </script>
 </body>
 </html>
