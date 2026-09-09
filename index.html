@@ -159,6 +159,10 @@ kbd{background:var(--ghost);border:1px solid var(--border);border-radius:5px;pad
 .report tr.tot td{background:#f4f7fa;font-weight:700}
 .report .rmeta{font-size:12.5px;color:#4a5666;margin:2px 0}
 .report .ok{color:#1f8a4c;font-weight:700}.report .pend{color:#a06400}
+.mtable{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:6px}
+.mtable th,.mtable td{border:1px solid var(--border);padding:5px 8px;text-align:left}
+.mtable th{background:var(--surface)}
+.mtable tr.hi td{background:var(--tagbg);font-weight:600}
 @media print{
   @page{margin:14mm}
   body{background:#fff}
@@ -208,9 +212,9 @@ kbd{background:var(--ghost);border:1px solid var(--border);border-radius:5px;pad
     </div>
     <div class="note" style="margin-top:10px">
       La <b>temperatura y humedad son reales</b> (en vivo desde Open-Meteo para Kabah); lo único que se calcula es la
-      <b>sensación térmica</b>. El objetivo dentro de las salas: <b>≈ 22 °C</b> con los <b>aires acondicionados</b> y
-      <b>≈ 50 % HR</b> con los <b>deshumidificadores</b> — así se frena el moho, la corrosión y la cristalización de sales
-      en la piedra y el estuco Puuc. Los <b>dataloggers</b> comprueban que ese control se cumple.
+      <b>sensación térmica</b>. Según los materiales del acervo (mayoría <b>lítica</b>, con <b>concha</b> y <b>metales</b>), la meta dentro
+      de las salas es <b>≈ 20 °C</b> con los <b>aires acondicionados</b> y <b>≈ 40 % HR</b> con los <b>deshumidificadores</b> — esa humedad
+      baja protege sobre todo a los <b>metales</b> (corrosión y sales) y a la <b>concha</b>. Los <b>dataloggers</b> comprueban que se cumpla.
     </div>
   </div>
 
@@ -229,9 +233,9 @@ kbd{background:var(--ghost);border:1px solid var(--border);border-radius:5px;pad
       <div class="eq">
         <div class="eqhead"><span class="eqbadge ac" id="eqIcoA"></span><div><b>Aire acondicionado</b><div class="small muted">controla la temperatura</div></div></div>
         <table>
-          <tr><td>Ajuste (setpoint)</td><td><b>22 °C</b></td></tr>
-          <tr><td>Función</td><td>enfría y estabiliza T°</td></tr>
-          <tr><td>Cobertura</td><td><b id="covA">35 m²</b> por equipo</td></tr>
+          <tr><td>Ajuste (setpoint)</td><td><b>20 °C</b></td></tr>
+          <tr><td>Montaje</td><td>en muro · sopla en cuña al frente</td></tr>
+          <tr><td>Alcance</td><td><b id="covA">~30 m² · cuña 7 m</b></td></tr>
         </table>
       </div>
       <div class="eq">
@@ -244,6 +248,34 @@ kbd{background:var(--ghost);border:1px solid var(--border);border-radius:5px;pad
       </div>
     </div>
   </div>
+
+  <!-- MATERIALES / PARÁMETROS RE-ORG -->
+  <details class="card" id="matCard">
+    <summary style="cursor:pointer;font-weight:700;font-size:17px">📋 Parámetros ambientales por material (RE-ORG) — y por qué 20 °C / 40 % HR</summary>
+    <p class="small muted" style="margin-top:8px">Cuadro de referencia reproducido del material proporcionado (los valores se muestran tal como aparecen en la fuente). El acervo del museo es <b>mayoría lítica</b>, con <b>concha</b> y <b>metales</b> — resaltados abajo.</p>
+    <div style="overflow:auto">
+    <table class="mtable" style="min-width:520px">
+      <thead><tr><th>Materia prima</th><th>Iluminación</th><th>Humedad</th><th>Temperatura</th></tr></thead>
+      <tbody>
+        <tr><td>Textiles</td><td>50 lux máx · filtros UV e IR</td><td>45–50 %</td><td>20–21 °C</td></tr>
+        <tr><td>Papel</td><td>50 lux máx · filtros UV e IR</td><td>45–55 %</td><td>20–21 °C</td></tr>
+        <tr><td>Maderas y materiales orgánicos</td><td>50–150 lux · filtros UV e IR</td><td>50–55 %</td><td>19–20 °C</td></tr>
+        <tr class="hi"><td>Concha y hueso</td><td>100–150 lux · filtros UV e IR</td><td>40–45 %</td><td>19–20 °C</td></tr>
+        <tr><td>Pintura de caballete</td><td>50 lux máx · filtros UV e IR</td><td>45–55 %</td><td>19–20 °C</td></tr>
+        <tr class="hi"><td>Metales, vidrio, esmaltes</td><td>sin restricciones</td><td>30–60 % · con oxidación o sales: 30–45 %</td><td>20–21 °C</td></tr>
+        <tr><td>Cerámica</td><td>sin restricciones</td><td>35–40 %</td><td>35–40 °C</td></tr>
+        <tr class="hi"><td>Lítica (piedra)</td><td>sin restricciones</td><td>35–40 %</td><td>35–40 °C</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="note" style="margin-top:10px">
+      <b>Objetivo elegido para este acervo:</b> se controla al material <b>más sensible presente</b>.
+      La <b>humedad</b> es el factor crítico: metales <b>30–45 %</b>, concha <b>40–45 %</b>, lítica <b>35–40 %</b> →
+      punto común <b>≈ 40 % HR</b> (protege a los metales de corrosión y sales). En <b>temperatura</b>, concha y metales piden
+      <b>~19–21 °C</b> (la piedra tolera más), por eso los A/C se ajustan a <b>≈ 20 °C</b>. La cantidad de A/C se calcula por el
+      área de cada sala y el alcance en cuña de cada equipo (1 por ~30 m²).
+    </div>
+  </details>
 
   <!-- MAPA / MINIATURA -->
   <div class="card" id="ovCard">
@@ -286,7 +318,7 @@ kbd{background:var(--ghost);border:1px solid var(--border);border-radius:5px;pad
     <div class="svwrap"><div class="sala" id="sala"></div></div>
     <div class="legend">
       <span><span class="lgi" id="lgD"></span> Deshumidificador · <span style="width:11px;height:11px;border-radius:50%;background:rgba(46,165,143,.5);display:inline-block"></span> humedad</span>
-      <span><span class="lgi" id="lgA"></span> A/C 22 °C · <span style="width:11px;height:11px;border-radius:50%;background:rgba(30,150,190,.5);display:inline-block"></span> temperatura</span>
+      <span><span class="lgi" id="lgA"></span> A/C 20 °C · <span style="width:11px;height:11px;background:rgba(30,150,190,.5);display:inline-block;clip-path:polygon(0 100%,100% 0,100% 100%)"></span> cuña (al frente)</span>
       <span><span class="lgi" id="lgL"></span> Datalogger</span>
       <span>🔓 abierta · 🔒 cerrada</span>
       <span><kbd>doble clic</kbd> retira un equipo</span>
@@ -337,14 +369,26 @@ const ICON = {
 /* ============================================================
    EQUIPO — parámetros
    ============================================================ */
+const AC_SETPOINT = 20;   // °C objetivo (metales/concha son los materiales más sensibles)
+const HR_TARGET   = 40;   // % HR objetivo (rango 40–45 para piedra + concha + metales)
 const EQ = {
-  dehum:{ label:'Deshumidificador', cover:60, need:60,  cls:'dehum', icon:ICON.dehum },
-  ac:   { label:'Aire acondicionado (22 °C)', cover:35, need:35, cls:'ac', icon:ICON.ac },
+  // Deshumidificador y datalogger: alcance circular (van sueltos / al centro)
+  dehum:{ label:'Deshumidificador', cover:60, need:60, cls:'dehum', icon:ICON.dehum },
+  // A/C: va PEGADO AL MURO y su alcance es una CUÑA/cono hacia el frente (no círculo)
+  ac:   { label:'Aire acondicionado ('+AC_SETPOINT+' °C)', need:30, thr:7.0, half:55, cls:'ac', icon:ICON.ac },
   dl:   { label:'Datalogger', radius:3.0, cls:'dl', icon:ICON.dl }
 };
 const DL_MIN_CLEAR_M = 1.5;
-const coverR = kind => kind==='dl' ? EQ.dl.radius : Math.sqrt(EQ[kind].cover/Math.PI);
+const coverR = kind => kind==='dl' ? EQ.dl.radius : Math.sqrt(EQ[kind].cover/Math.PI); // círculos (dehum/dl)
 const requiredN = (kind,s) => kind==='dl' ? Math.max(1,Math.ceil((s.w*s.h)/150)) : Math.max(1,Math.ceil((s.w*s.h)/EQ[kind].need));
+// A/C direccional: muro más cercano y ángulo base (normal hacia el interior, coords y-hacia-abajo)
+function acWall(u){ const dL=u.x,dR=cur.w-u.x,dT=u.y,dB=cur.h-u.y,m=Math.min(dL,dR,dT,dB);
+  return m===dL?'L':m===dR?'R':m===dT?'T':'B'; }
+function acBase(w){ return w==='L'?0 : w==='R'?Math.PI : w==='T'?Math.PI/2 : -Math.PI/2; }
+function angDiff(a,b){ let d=Math.abs(a-b)%(2*Math.PI); return d>Math.PI?2*Math.PI-d:d; }
+function acCovers(u,x,y){ const dx=x-u.x,dy=y-u.y,dist=Math.hypot(dx,dy);
+  if(dist>EQ.ac.thr) return false;
+  return angDiff(Math.atan2(dy,dx), acBase(u.wall)) <= EQ.ac.half*Math.PI/180; }
 
 /* ============================================================
    SALAS — medidas FIJAS (calibradas con el plano · metros)
@@ -506,7 +550,7 @@ function buildOverview(){ buildMuseoMap(document.getElementById('ov'),1,null,ope
 /* ============================================================
    WORKSPACE — sala a escala, drag & drop
    ============================================================ */
-let cur=null, PXM=1, units=[], openings=[], salaEl=null;
+let cur=null, PXM=1, units=[], openings=[], salaEl=null, acSvg=null;
 const MAXW=620, MAXH=500;
 function openSala(id){
   if(cur) snapshotSala();
@@ -538,6 +582,11 @@ function clampWall(v,max){ return Math.max(0,Math.min(v,max)); }
 function renderSala(closedArr){
   salaEl=document.getElementById('sala');
   salaEl.style.width=(cur.w*PXM)+'px'; salaEl.style.height=(cur.h*PXM)+'px'; salaEl.innerHTML='';
+  // capa SVG para las cuñas direccionales del A/C (van bajo las unidades)
+  acSvg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+  acSvg.setAttribute('width',cur.w*PXM); acSvg.setAttribute('height',cur.h*PXM);
+  acSvg.style.cssText='position:absolute;left:0;top:0;z-index:4;pointer-events:none;overflow:visible';
+  salaEl.appendChild(acSvg);
   if(cur.exhibit){const e=document.createElement('div');e.className='exhibit';
     Object.assign(e.style,{left:cur.exhibit.x*PXM+'px',top:cur.exhibit.y*PXM+'px',width:cur.exhibit.w*PXM+'px',height:cur.exhibit.h*PXM+'px'});
     e.textContent='exhibición'; salaEl.appendChild(e);}
@@ -564,18 +613,37 @@ function buildTray(){
 function addUnit(kind,x,y){
   const u={kind,x,y}; const el=document.createElement('div');
   el.className='unit '+EQ[kind].cls; el.innerHTML=EQ[kind].icon(21); el.title=EQ[kind].label+' — arrastra · doble clic retira';
-  const cover=document.createElement('div'); cover.className='cover '+EQ[kind].cls; salaEl.appendChild(cover);
-  u.el=el; u.cover=cover;
+  u.el=el;
+  if(kind==='ac'){ u.cover=null; }            // el A/C usa cuña en el SVG, no círculo
+  else { const cover=document.createElement('div'); cover.className='cover '+EQ[kind].cls; salaEl.appendChild(cover); u.cover=cover; }
   el.onpointerdown=e=>{e.preventDefault();e.stopPropagation();startDragUnit(e,u);};
   el.ondblclick=e=>{e.stopPropagation();removeUnit(u);};
   salaEl.appendChild(el); units.push(u); placeUnit(u); renderStats();
   return u;
 }
-function removeUnit(u){ u.el.remove(); if(u.cover)u.cover.remove(); units=units.filter(x=>x!==u); renderStats(); snapshotSala(); }
+function removeUnit(u){ u.el.remove(); if(u.cover)u.cover.remove(); units=units.filter(x=>x!==u); if(u.kind==='ac')redrawAC(); renderStats(); snapshotSala(); }
 function placeUnit(u){
+  if(u.kind==='ac'){ u.wall=acWall(u);        // pegar al muro más cercano
+    if(u.wall==='L')u.x=0; else if(u.wall==='R')u.x=cur.w; else if(u.wall==='T')u.y=0; else u.y=cur.h;
+    u.el.style.left=u.x*PXM+'px'; u.el.style.top=u.y*PXM+'px'; redrawAC(); return;
+  }
   u.el.style.left=u.x*PXM+'px'; u.el.style.top=u.y*PXM+'px';
   const r=coverR(u.kind)*PXM;
   u.cover.style.left=u.x*PXM+'px'; u.cover.style.top=u.y*PXM+'px'; u.cover.style.width=2*r+'px'; u.cover.style.height=2*r+'px';
+}
+function redrawAC(){
+  if(!acSvg) return; acSvg.innerHTML='';
+  const NS='http://www.w3.org/2000/svg', R=EQ.ac.thr*PXM, ha=EQ.ac.half*Math.PI/180;
+  units.filter(u=>u.kind==='ac').forEach(u=>{
+    const cx=u.x*PXM, cy=u.y*PXM, base=acBase(u.wall||acWall(u));
+    let d='M '+cx+' '+cy; const N=16;
+    for(let i=0;i<=N;i++){ const a=base-ha+(2*ha)*i/N; d+=' L '+(cx+R*Math.cos(a))+' '+(cy+R*Math.sin(a)); }
+    d+=' Z';
+    const p=document.createElementNS(NS,'path'); p.setAttribute('d',d);
+    p.setAttribute('fill','rgba(30,150,190,.16)'); p.setAttribute('stroke','rgba(18,136,168,.65)');
+    p.setAttribute('stroke-width','1.5'); p.setAttribute('stroke-dasharray','5 4');
+    acSvg.appendChild(p);
+  });
 }
 function clampUnit(u){ u.x=Math.max(0,Math.min(u.x,cur.w)); u.y=Math.max(0,Math.min(u.y,cur.h)); }
 
@@ -604,9 +672,10 @@ function startDragUnit(e,u){
    ============================================================ */
 function dist(ax,ay,bx,by){return Math.hypot(ax-bx,ay-by);}
 function coveragePct(kind){
-  const step=0.4; let inside=0,covered=0; const us=units.filter(u=>u.kind===kind); const R=coverR(kind);
+  const step=0.4; let inside=0,covered=0; const us=units.filter(u=>u.kind===kind);
+  const R = kind==='ac' ? 0 : coverR(kind);
   for(let x=step/2;x<cur.w;x+=step)for(let y=step/2;y<cur.h;y+=step){ inside++;
-    for(const d of us){ if(dist(x,y,d.x,d.y)<=R){covered++;break;} } }
+    for(const d of us){ if(kind==='ac' ? acCovers(d,x,y) : dist(x,y,d.x,d.y)<=R){covered++;break;} } }
   return inside?covered/inside:0;
 }
 function nearestOpening(u){ let best=1e9; openings.forEach(o=>best=Math.min(best,dist(u.x,u.y,clampWall(o.x,cur.w),clampWall(o.y,cur.h)))); return best; }
@@ -615,7 +684,7 @@ function renderStats(){
   const closed=openings.filter(o=>o.closed).length;
   document.getElementById('statBox').innerHTML=`
     <div class="s"><span class="small muted">Deshumidificadores (HR)</span><b>${nd} / ${requiredN('dehum',cur)}</b><span class="small muted">cobertura ${Math.round(coveragePct('dehum')*100)}%</span></div>
-    <div class="s"><span class="small muted">Aires acond. (22 °C)</span><b>${na} / ${requiredN('ac',cur)}</b><span class="small muted">cobertura ${Math.round(coveragePct('ac')*100)}%</span></div>
+    <div class="s"><span class="small muted">Aires acond. (${AC_SETPOINT} °C)</span><b>${na} / ${requiredN('ac',cur)}</b><span class="small muted">alcance ${Math.round(coveragePct('ac')*100)}%</span></div>
     <div class="s"><span class="small muted">Dataloggers</span><b>${nl} / ${requiredN('dl',cur)}</b><span class="small muted">monitoreo</span></div>
     <div class="s"><span class="small muted">Aperturas cerradas</span><b>${closed} / ${openings.length}</b><span class="small muted">🔒 controla el ambiente</span></div>`;
 }
@@ -631,9 +700,9 @@ function evaluarSala(){
   else if(dh.length<reqD) bad.push(`Faltan deshumidificadores: ${dh.length} de ${reqD} (uno cada ${EQ.dehum.need} m² para ${area} m²).`);
   else bad.push(`Reparte los deshumidificadores: solo cubren el ${Math.round(covD*100)}% (deja zonas con HR alta).`);
 
-  if(ac.length>=reqA && covA>=0.85) good.push(`Temperatura cubierta a 22 °C: ${ac.length} A/C, ${Math.round(covA*100)}% del área.`);
-  else if(ac.length<reqA) bad.push(`Faltan aires acondicionados: ${ac.length} de ${reqA} (uno cada ${EQ.ac.need} m²) para sostener 22 °C.`);
-  else bad.push(`Reparte los A/C: solo enfrían el ${Math.round(covA*100)}% de la sala.`);
+  if(ac.length>=reqA && covA>=0.80) good.push(`Temperatura cubierta a ${AC_SETPOINT} °C: ${ac.length} A/C, su cuña alcanza el ${Math.round(covA*100)}% del área.`);
+  else if(ac.length<reqA) bad.push(`Faltan aires acondicionados: ${ac.length} de ${reqA} (uno cada ${EQ.ac.need} m²) para sostener ${AC_SETPOINT} °C con 40 °C afuera.`);
+  else bad.push(`Reorienta/reparte los A/C: su cuña solo alcanza el ${Math.round(covA*100)}% de la sala (recuerda que soplan hacia el frente desde el muro).`);
 
   if(dl.length>=reqL) good.push(`Dataloggers suficientes (${dl.length}).`);
   else bad.push(`Coloca al menos ${reqL} datalogger(s) para vigilar T° y HR de esta sala.`);
@@ -644,7 +713,7 @@ function evaluarSala(){
   if(dlOn.length) bad.push(`Aleja los dataloggers ~1 m de los equipos: pegados a un A/C o deshumidificador la lectura no representa la sala.`);
 
   if(total){ if(closed===total) good.push(`Puertas y ventanas cerradas 🔒 — el control de T° y HR funciona.`);
-    else bad.push(`Quedan ${total-closed} apertura(s) abiertas 🔓: entra el aire de afuera (${Math.round(climaT)} °C / ${Math.round(climaRH)}% HR) y los equipos no sostienen 22 °C ni 50 % HR.`); }
+    else bad.push(`Quedan ${total-closed} apertura(s) abiertas 🔓: entra el aire de afuera (${Math.round(climaT)} °C / ${Math.round(climaRH)}% HR) y los equipos no sostienen ${AC_SETPOINT} °C ni ${HR_TARGET} % HR.`); }
 
   const ok=bad.length===0;
   const fb=document.getElementById('fbBox'); fb.className='fb '+(ok?'ok':'no');
@@ -667,7 +736,7 @@ function paintIcons(){
   document.getElementById('lgA').innerHTML=ICON.ac(18);
   document.getElementById('lgL').innerHTML=ICON.dl(18);
   document.getElementById('covD').textContent=EQ.dehum.cover+' m²';
-  document.getElementById('covA').textContent=EQ.ac.cover+' m²';
+  document.getElementById('covA').textContent='~'+EQ.ac.need+' m² · cuña '+EQ.ac.thr+' m';
 }
 /* ============================================================
    INFORME imprimible del museo
@@ -689,14 +758,14 @@ function buildReport(){
     <h2 style="margin:0 0 2px">Informe de colocación — Sección 4 (Deshumidificadores, A/C y dataloggers)</h2>
     <div class="rmeta">Museo Arqueológico del Puuc · Zona Arqueológica de Kabah, Santa Elena, Yucatán · ${fecha}</div>
     <div class="rmeta">Clima de referencia: <b>${Math.round(climaT)} °C</b> · <b>${Math.round(climaRH)} % HR</b> · sensación térmica ${hi} °C</div>
-    <div class="rmeta">Metas de conservación en sala: <b>≈ 22 °C</b> (aires acondicionados) · <b>≈ 50 % HR</b> (deshumidificadores)</div>
+    <div class="rmeta">Metas de conservación en sala (según materiales — mayoría lítica, con concha y metales): <b>≈ ${AC_SETPOINT} °C</b> (aires acondicionados) · <b>≈ ${HR_TARGET} % HR</b> (deshumidificadores)</div>
     <table>
-      <thead><tr><th>Sala</th><th>Medida</th><th>Área</th><th>Deshum. (col./meta)</th><th>A/C 22 °C (col./meta)</th><th>Dataloggers (col./meta)</th><th>Estado</th></tr></thead>
+      <thead><tr><th>Sala</th><th>Medida</th><th>Área</th><th>Deshum. (col./meta)</th><th>A/C ${AC_SETPOINT} °C (col./meta)</th><th>Dataloggers (col./meta)</th><th>Estado</th></tr></thead>
       <tbody>${rows}
         <tr class="tot"><td>TOTAL</td><td>—</td><td>${Math.round(area)} m²</td><td>${td}</td><td>${ta}</td><td>${tl}</td><td>${dn}/${SALAS.length} listas</td></tr>
       </tbody>
     </table>
-    <div class="rmeta" style="margin-top:10px"><b>Equipo:</b> Deshumidificador Hisense DH50K1R (23.7 L/día · cobertura ~${EQ.dehum.cover} m²) · Aire acondicionado a 22 °C (~${EQ.ac.cover} m²) · Datalogger HTC-2 (T°/HR, ~1.5 m de altura, lejos de puertas/ventanas y equipos).</div>
+    <div class="rmeta" style="margin-top:10px"><b>Equipo:</b> Deshumidificador Hisense DH50K1R (23.7 L/día · cobertura ~${EQ.dehum.cover} m²) · Aire acondicionado a ${AC_SETPOINT} °C, pegado al muro con alcance en cuña (~${EQ.ac.thr} m, 1 por ~${EQ.ac.need} m²) · Datalogger HTC-2 (T°/HR, ~1.5 m de altura, lejos de puertas/ventanas y equipos).</div>
     <div class="rmeta">Regla de conteo: 1 deshumidificador por cada ${EQ.dehum.need} m², 1 A/C por cada ${EQ.ac.need} m². Cerrar puertas y ventanas para sostener el control ambiental.</div>
     <div class="rmeta" style="margin-top:8px;color:#7a8695">Generado con la herramienta RE-ORG · las medidas de sala provienen del plano oficial (área total 978.3 m²).</div>`;
 }
