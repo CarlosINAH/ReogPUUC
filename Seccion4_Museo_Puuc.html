@@ -515,14 +515,14 @@ function updMuseoSum(){
    ============================================================ */
 const BASE={w:760,h:600};
 const OV_POS={
-  temporal:{x:70,y:70,w:78,h:470}, poniente:{x:152,y:70,w:78,h:470},
-  norte:{x:300,y:24,w:180,h:170}, patio:{x:300,y:204,w:180,h:210},
-  sur:{x:305,y:424,w:170,h:120}, oriente:{x:560,y:70,w:96,h:470}
+  temporal:{x:60,y:64,w:84,h:468}, poniente:{x:150,y:64,w:84,h:468},
+  norte:{x:300,y:64,w:184,h:150}, patio:{x:300,y:226,w:184,h:176},
+  sur:{x:300,y:414,w:184,h:118}, oriente:{x:548,y:64,w:96,h:468}
 };
 const ABBR={norte:'Nte',sur:'Sur',oriente:'Ote',poniente:'Pte',temporal:'Tmp'};
-const SERV=[ {x:70,y:20,w:150,h:40,t:'Taller · C. eléctrico'},
-             {x:600,y:20,w:150,h:70,t:'Bombas · Cisterna'},
-             {x:70,y:552,w:150,h:38,t:'Cafetería · Sanitarios'} ];
+const SERV=[ {x:60,y:8,w:190,h:44,t:'Taller · C. eléctrico'},
+             {x:508,y:8,w:192,h:44,t:'Bombas · Cisterna'},
+             {x:60,y:544,w:190,h:46,t:'Cafetería · Sanitarios'} ];
 function buildMuseoMap(el, k, currentId, onSala){
   el.innerHTML=''; el.style.width=(BASE.w*k)+'px'; el.style.height=(BASE.h*k)+'px';
   const px=(o)=>({left:o.x*k+'px',top:o.y*k+'px',width:o.w*k+'px',height:o.h*k+'px'});
