@@ -429,7 +429,7 @@ async function fetchWeather(){
   }catch(e){
     setManual();
     dot.className='livedot off'; tag.textContent='manual'; tag.style.background='';
-    st.innerHTML='Sin conexión al servicio — escribe la T° y HR reales (edítalas arriba). <span class="muted">En la versión publicada del museo, los datos llegan solos.</span>';
+    st.innerHTML='Va en <b>manual</b> porque esta vista tiene el internet bloqueado (vista previa/sandbox). En la <b>web del museo</b> (GitHub Pages) o abriendo el archivo en tu navegador, se pone <b>en vivo</b> solo. Mientras tanto, escribe la T° y HR reales arriba.';
     updClima();
   }
 }
