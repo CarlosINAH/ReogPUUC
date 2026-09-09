@@ -172,7 +172,7 @@ kbd{background:var(--ghost);border:1px solid var(--border);border-radius:5px;pad
       <div class="metric">
         <span class="small muted">Temperatura exterior</span>
         <div><input id="tIn" class="bignum" type="number" value="40" min="-5" max="60" step="0.1"><span class="unitof">°C</span></div>
-        <span class="small muted">Kabah, Yucatán</span>
+        <span class="small muted">Kabah, Santa Elena, Yuc.</span>
       </div>
       <div class="metric">
         <span class="small muted">Humedad relativa exterior</span>
@@ -349,7 +349,8 @@ const SALAS = [
 /* ============================================================
    CLIMA — en vivo (Open-Meteo) + índice de calor NWS
    ============================================================ */
-const GEO={lat:20.2456,lon:-89.6486,name:'Kabah, Yucatán'};
+// Ubicación del Museo Arqueológico del Puuc — zona de Kabah, Santa Elena, Yucatán.
+const GEO={lat:20.2497,lon:-89.6478,name:'Kabah, Santa Elena, Yucatán'};
 let climaT=40, climaRH=55;
 const tIn=document.getElementById('tIn'), rhIn=document.getElementById('rhIn');
 function heatIndexC(tc, rh){
@@ -392,7 +393,7 @@ async function fetchWeather(){
     tIn.value=climaT; rhIn.value=climaRH; tIn.readOnly=true; rhIn.readOnly=true; tIn.classList.add('ro'); rhIn.classList.add('ro');
     const hh=new Date(c.time).toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'});
     dot.className='livedot on'; tag.textContent='en vivo'; tag.style.background='';
-    st.innerHTML=`En vivo · Open-Meteo · Kabah · actualizado ${hh}`;
+    st.innerHTML=`En vivo · servicio público <a href="https://open-meteo.com" target="_blank" rel="noopener" style="color:var(--accent)">Open-Meteo</a> · ${GEO.name} · actualizado ${hh}`;
     updClima();
   }catch(e){
     setManual();
@@ -648,6 +649,7 @@ let theme='dark'; try{ theme=localStorage.getItem('puuc_theme')||'dark'; }catch(
 applyTheme(theme);
 
 paintIcons(); buildOverview(); updProgress(); updClima(); fetchWeather();
+setInterval(fetchWeather, 600000); // se actualiza solo cada 10 min
 </script>
 </body>
 </html>
